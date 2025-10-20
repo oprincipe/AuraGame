@@ -5,12 +5,81 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interaction/EnemyInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
 	
 }
+
+void AAuraPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	CursorTrace();
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, CursorHit);
+	if (!CursorHit.bBlockingHit) return;
+	
+	LastActor = ThisActor;
+	ThisActor = CursorHit.GetActor();
+
+	/**
+	 * Line trace from cursor. There are several scenarios:
+	 * A. LastActor is null && ThisActor is null
+	 *	- Do nothing
+	 * B. LastActor is null && ThisActor is not null
+	 *  - Highlight ThisActor
+	 * C. LastActor is not null && ThisActor is null
+	 *  - UnHighlight LastActor
+	 * D. LastActor is not null && ThisActor is not null, but LastActor != ThisActor
+	 *  - UnHighlight LastActor
+	 *  - Highlight ThisActor
+	 * E. LastActor is not null && ThisActor is not null, but LastActor == ThisActor
+	 *  - Do nothing
+	 */
+	HandleActorHighlighting();
+}
+
+void AAuraPlayerController::HandleActorHighlighting()
+{
+	// Case A: Both actors are null - do nothing
+	if (LastActor == nullptr && ThisActor == nullptr)
+	{
+		return;
+	}
+	
+	// Case B: Only ThisActor is valid - highlight it
+	if (LastActor == nullptr && ThisActor != nullptr)
+	{
+		ThisActor->HighlightActor();
+		return;
+	}
+	
+	// Case C: Only LastActor is valid - unhighlight it
+	if (LastActor != nullptr && ThisActor == nullptr)
+	{
+		LastActor->UnHighlightActor();
+		return;
+	}
+	
+	// Case D & E: Both actors are valid
+	if (LastActor != nullptr && ThisActor != nullptr)
+	{
+		if (LastActor != ThisActor)
+		{
+			// Case D: Different actors - switch highlighting
+			LastActor->UnHighlightActor();
+			ThisActor->HighlightActor();
+		}
+		// Case E: Same actor - do nothing (implicit)
+	}
+}
+
 
 void AAuraPlayerController::BeginPlay()
 {
@@ -56,3 +125,4 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	}
 	
 }
+

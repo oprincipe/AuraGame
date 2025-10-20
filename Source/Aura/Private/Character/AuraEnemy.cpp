@@ -3,30 +3,36 @@
 
 #include "Character/AuraEnemy.h"
 
+#include "Aura/Aura.h"
 
-// Sets default values
+
 AAuraEnemy::AAuraEnemy()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 }
 
-// Called when the game starts or when spawned
-void AAuraEnemy::BeginPlay()
+#pragma region IEnemyInterface
+
+void AAuraEnemy::HighlightActor()
 {
-	Super::BeginPlay();
-	
+	GetMesh()->SetRenderCustomDepth(true);
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	if (Weapon)
+	{
+		Weapon->SetRenderCustomDepth(true);
+		Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	}
 }
 
-// Called every frame
-void AAuraEnemy::Tick(float DeltaTime)
+void AAuraEnemy::UnHighlightActor()
 {
-	Super::Tick(DeltaTime);
+	GetMesh()->SetRenderCustomDepth(false);
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	if (Weapon)
+	{
+		Weapon->SetRenderCustomDepth(false);
+		Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	}
 }
 
-// Called to bind functionality to input
-void AAuraEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
+#pragma endregion
