@@ -55,4 +55,5 @@ public:
 	void SetWidgetControllerParams(const FWidgetControllerParams& Params);
 
 	virtual void BroadcastInitialValues();
+	virtual void BindCallbackToDependencies();
 };
