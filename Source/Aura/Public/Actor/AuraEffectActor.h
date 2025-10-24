@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GameplayEffectTypes.h"
 #include "AuraEffectActor.generated.h"
 
 class UGameplayEffect;
@@ -63,11 +62,15 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
 	TSubclassOf<UGameplayEffect> InfiniteGameplayEffectClass;
-
 	/** End Infinite effects */
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
 	bool bDestroyOnEffectRemoval = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	float ActorLevel = 1.0f;
+
+#pragma region Functions
 	
 	UFUNCTION(BlueprintCallable, Category="AuraEffectActor")
 	void ApplyEffectToTarget(AActor* TargetActor, const TSubclassOf<UGameplayEffect> GameplayEffectClass);
@@ -77,5 +80,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category="AuraEffectActor")
 	void OnEndOverlap(AActor* TargetActor);
-	
+
+#pragma endregion
 };
