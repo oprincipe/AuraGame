@@ -28,6 +28,7 @@ protected:
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 #pragma region  AbilitySystem
+	virtual void InitAbilityActorInfo();
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY() TObjectPtr<UAttributeSet> AttributeSet;
 #pragma endregion
