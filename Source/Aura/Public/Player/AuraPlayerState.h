@@ -25,13 +25,13 @@ public:
 	// End IAbilitySystemInterface
 
 protected:
-#pragma region  AbilitySystem
-	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+#pragma region  AbilitySystemProperties
+	UPROPERTY(VisibleAnywhere) TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY() TObjectPtr<UAttributeSet> AttributeSet;
 #pragma endregion
 
 public:
-#pragma region  AbilitySystem
+#pragma region  AbilitySystemFunctions
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 #pragma endregion
 };

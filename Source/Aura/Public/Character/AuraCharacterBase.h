@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "AuraCharacterBase.generated.h"
 
+class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
 
@@ -27,15 +28,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-#pragma region  AbilitySystem
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
 	virtual void InitAbilityActorInfo();
+	void InitializePrimaryAttributes() const;
+	
+#pragma region  AbilitySystemVariables
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY() TObjectPtr<UAttributeSet> AttributeSet;
 #pragma endregion
 
 
 public:
-#pragma region  AbilitySystem
+#pragma region  AbilitySystemFunctions
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 #pragma endregion
 };
