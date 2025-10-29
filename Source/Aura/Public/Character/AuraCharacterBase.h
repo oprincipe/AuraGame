@@ -31,8 +31,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
 	virtual void InitAbilityActorInfo();
-	void InitializePrimaryAttributes() const;
+
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
+	void InitializeDefaultAttributes() const;
 	
 #pragma region  AbilitySystemVariables
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
