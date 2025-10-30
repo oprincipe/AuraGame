@@ -25,8 +25,15 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+int32 AAuraCharacterBase::GetPlayerLevel() const
+{
+	// Extended on child classes
+	return ICombatInterface::GetPlayerLevel();
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
+	// Extended on child classes
 }
 
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffectClass, const float Level) const
@@ -34,13 +41,16 @@ void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> Ga
 	checkf(GameplayEffectClass != nullptr, TEXT("GameplayEffectClass is not set"));
 	checkf(GetAbilitySystemComponent(), TEXT("AbilitySystemComponent is not set"));
 	
-	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
 
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
-	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultPrimaryAttributes, GetPlayerLevel());
+	ApplyEffectToSelf(DefaultSecondaryAttributes, GetPlayerLevel());
+	ApplyEffectToSelf(DefaultVitalAttributes, GetPlayerLevel());
 }

@@ -19,6 +19,7 @@ class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInte
 
 public:
 	AAuraPlayerState();
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	// Start IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -34,4 +35,11 @@ public:
 #pragma region  AbilitySystemFunctions
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 #pragma endregion
+
+	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
+	
+private:
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Level) int32 Level = 1;
+	UFUNCTION() void OnRep_Level(const int32& OldLevel) const;
+	
 };

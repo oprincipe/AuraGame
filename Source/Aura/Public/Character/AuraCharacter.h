@@ -17,6 +17,10 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 
+	// Start ICombatInterface
+	virtual int32 GetPlayerLevel() const override;
+	// End ICombatInterface
+	
 private:
 	virtual void InitAbilityActorInfo() override;
 	
