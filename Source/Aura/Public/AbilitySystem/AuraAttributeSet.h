@@ -13,8 +13,6 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-// This delegate can have a function bound to it that returns the getter value for the attribute
-DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature)
 
 USTRUCT(BlueprintType)
 struct FEffectProperties
