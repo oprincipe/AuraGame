@@ -8,6 +8,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
@@ -52,9 +53,17 @@ protected:
 	UPROPERTY() TObjectPtr<UAttributeSet> AttributeSet;
 #pragma endregion
 
-
+#pragma region  AbilitySystemProtectedFunctions
+	void AddCharacterAbilities() const;
+#pragma endregion 
+	
 public:
-#pragma region  AbilitySystemFunctions
+#pragma region  AbilitySystemPublicFunctions
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 #pragma endregion
+
+private:
+	UPROPERTY(EditAnywhere, Category="Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
 };
