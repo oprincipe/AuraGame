@@ -12,7 +12,7 @@ void UAuraAttributeMenuWidgetController::BindCallbackToDependencies()
 	for (auto& Pair : AS->TagsToAttributesMap)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value).AddLambda(
-			[this, Pair, AS](const FOnAttributeChangeData& Data)
+			[this, Pair](const FOnAttributeChangeData& Data)
 			{
 				BroadcastAttributeInfo(Pair.Key, Pair.Value);
 			}
