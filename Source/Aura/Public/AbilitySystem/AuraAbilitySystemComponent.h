@@ -26,6 +26,8 @@ public:
 	FEffectAssetTagsSignature EffectAssetTagsDelegate;
 	
 protected:
-	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle) const;
+
+	UFUNCTION(Client, Reliable)
+	void Client_EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle) const;
 	
 };
