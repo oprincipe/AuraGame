@@ -58,6 +58,7 @@ private:
 	/** End movement logic */
 	
 	void Move(const FInputActionValue& InputActionValue);
+	void AutoRun();
 	void CursorTrace();
 	void HandleActorHighlighting() const;
 	void AbilityInputTagPressed(FGameplayTag InputTag);
