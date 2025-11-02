@@ -47,62 +47,20 @@ void AAuraPlayerController::AutoRun()
 
 void AAuraPlayerController::CursorTrace()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 	
 	LastActor = ThisActor;
 	ThisActor = CursorHit.GetActor();
-
-	/**
-	 * Line trace from cursor. There are several scenarios:
-	 * A. LastActor is null && ThisActor is null
-	 *	- Do nothing
-	 * B. LastActor is null && ThisActor is not null
-	 *  - Highlight ThisActor
-	 * C. LastActor is not null && ThisActor is null
-	 *  - UnHighlight LastActor
-	 * D. LastActor is not null && ThisActor is not null, but LastActor != ThisActor
-	 *  - UnHighlight LastActor
-	 *  - Highlight ThisActor
-	 * E. LastActor is not null && ThisActor is not null, but LastActor == ThisActor
-	 *  - Do nothing
-	 */
 	HandleActorHighlighting();
 }
 
 void AAuraPlayerController::HandleActorHighlighting() const
 {
-	// Case A: Both actors are null - do nothing
-	if (LastActor == nullptr && ThisActor == nullptr)
+	if (LastActor != ThisActor)
 	{
-		return;
-	}
-	
-	// Case B: Only ThisActor is valid - highlight it
-	if (LastActor == nullptr && ThisActor != nullptr)
-	{
-		ThisActor->HighlightActor();
-		return;
-	}
-	
-	// Case C: Only LastActor is valid - unhighlight it
-	if (LastActor != nullptr && ThisActor == nullptr)
-	{
-		LastActor->UnHighlightActor();
-		return;
-	}
-	
-	// Case D & E: Both actors are valid
-	if (LastActor != nullptr && ThisActor != nullptr)
-	{
-		if (LastActor != ThisActor)
-		{
-			// Case D: Different actors - switch highlighting
-			LastActor->UnHighlightActor();
-			ThisActor->HighlightActor();
-		}
-		// Case E: Same actor - do nothing (implicit)
+		if (LastActor) LastActor->UnHighlightActor();
+		if (ThisActor) ThisActor->HighlightActor();
 	}
 }
 
@@ -169,25 +127,18 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	// Check if the input tag is not the LMB
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
 
 	// In case is the LMB
 	if (bTargeting)
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 	}
 	else
 	{
-		APawn* ControlledPawn = GetPawn();
-		if (FollowTime <= ShortPressThreshold && ControlledPawn)
+		if (const APawn* ControlledPawn = GetPawn(); FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
 			// Create the navigation path
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
@@ -196,7 +147,6 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				for (const FVector& PointLoc : NavPath->PathPoints)
 				{
 					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
 				}
 				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 				bAutoRunning = true;
@@ -212,29 +162,19 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	// Check if the input tag is not the LMB
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
 	}
 
 	// In case is the LMB
 	if (bTargeting)
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
 	else
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds(); // Increase the follow time
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility, false, Hit))
-		{
-			CachedDestination = Hit.ImpactPoint;
-		}
+		if (CursorHit.bBlockingHit) CachedDestination = CursorHit.ImpactPoint;
 
 		if (APawn* ControlledPawn = GetPawn())
 		{

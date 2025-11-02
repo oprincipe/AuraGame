@@ -46,6 +46,7 @@ private:
 
 	TScriptInterface<IEnemyInterface> LastActor;
 	TScriptInterface<IEnemyInterface> ThisActor;
+	FHitResult CursorHit;
 
 	/** Movement logic */
 	FVector CachedDestination = FVector::ZeroVector;
