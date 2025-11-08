@@ -21,5 +21,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
 
-	
+public:
+	UFUNCTION(BlueprintCallable, Category="Projectile")
+	void SpawnProjectile(const FGameplayAbilityActivationInfo ActivationInfo);
+
 };
