@@ -32,6 +32,16 @@ int32 AAuraCharacterBase::GetPlayerLevel() const
 	return ICombatInterface::GetPlayerLevel();
 }
 
+FVector AAuraCharacterBase::GetCombatSocketLocation()
+{
+	if (IsValid(Weapon) && Weapon->GetSkeletalMeshAsset())
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	
+	return GetMesh()->GetSocketLocation(WeaponTipSocketName);
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 	// Extended on child classes

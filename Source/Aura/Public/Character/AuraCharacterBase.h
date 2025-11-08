@@ -26,6 +26,7 @@ public:
 
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel() const override;
+	virtual FVector GetCombatSocketLocation() override;
 	// End ICombatInterface
 	
 protected:
@@ -33,6 +34,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	FName WeaponTipSocketName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
