@@ -3,8 +3,11 @@
 
 #include "Actor/AuraProjectile.h"
 
+#include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AAuraProjectile::AAuraProjectile()
@@ -31,11 +34,62 @@ AAuraProjectile::AAuraProjectile()
 void AAuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetLifeSpan(LifeSpan);
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
+
+	if (LoopingSound)
+	{
+		LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
+	}
+}
+
+void AAuraProjectile::Destroyed()
+{
+	// On clients (non-authority), play impact effects if the projectile hasn't hit anything yet
+	if (!bHit && !HasAuthority())
+	{
+		PlayEffects();
+	}
+
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
+	
+	// Call parent class's Destroyed function to complete the destruction process
+	Super::Destroyed();
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+									  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// Play impact effects (sound and visual) when projectile overlaps with something
+	PlayEffects();
 	
+	// On server (authority), destroy the projectile
+	if (HasAuthority())
+	{
+		Destroy();
+	}
+	// On clients (non-authority), mark the projectile as hit
+	// This prevents playing effects twice when the projectile is destroyed
+	else
+	{
+		bHit = true;
+	}
+}
+
+void AAuraProjectile::PlayEffects() const
+{
+	if (ImpactSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
+	}
+
+	if (ImpactEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+	}
 }
