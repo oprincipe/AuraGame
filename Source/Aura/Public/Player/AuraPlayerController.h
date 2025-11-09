@@ -40,6 +40,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Input", meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UInputAction> MoveAction;
+	
+	UPROPERTY(EditAnywhere, Category="Input", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UInputAction> ShiftAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input", meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UAuraInputConfig> InputConfig;
@@ -57,8 +60,15 @@ private:
 	UPROPERTY(EditDefaultsOnly) float AutoRunAcceptanceRadius = 50.f;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<USplineComponent> Spline;
 	/** End movement logic */
-	
 	void Move(const FInputActionValue& InputActionValue);
+
+
+	/** Shift logic */
+	bool bShiftDown = false;
+	void ShiftPressed() { bShiftDown = true; };
+	void ShiftReleased() { bShiftDown = false; };
+	/** End Shift logic */
+	
 	void AutoRun();
 	void CursorTrace();
 	void HandleActorHighlighting() const;

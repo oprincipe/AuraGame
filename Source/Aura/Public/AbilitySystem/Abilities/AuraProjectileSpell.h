@@ -23,6 +23,6 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Projectile")
-	void SpawnProjectile(const FGameplayAbilityActivationInfo ActivationInfo);
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 
 };
