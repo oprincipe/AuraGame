@@ -3,6 +3,8 @@
 
 #include "Actor/AuraProjectile.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Aura/Aura.h"
 #include "Components/AudioComponent.h"
@@ -73,6 +75,13 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// On server (authority), destroy the projectile
 	if (HasAuthority())
 	{
+		// Get the Ability System Component from the actor hit by projectile
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			// Apply the damage gameplay effect to the hit actor's ASC using the effect spec handle stored during projectile spawn
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());	
+		}
+		
 		Destroy();
 	}
 	// On clients (non-authority), mark the projectile as hit

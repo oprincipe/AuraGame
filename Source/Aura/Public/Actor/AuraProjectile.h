@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 #include "AuraProjectile.generated.h"
 
+struct FGameplayEffectSpecHandle;
 class UNiagaraSystem;
 class UProjectileMovementComponent;
 class USphereComponent;
@@ -18,6 +20,7 @@ class AURA_API AAuraProjectile : public AActor
 public:
 	AAuraProjectile();
 	UPROPERTY(VisibleAnywhere) TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true)) FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 protected:
 	virtual void BeginPlay() override;
