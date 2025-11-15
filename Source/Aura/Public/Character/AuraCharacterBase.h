@@ -50,7 +50,7 @@ protected:
 	virtual void InitAbilityActorInfo();
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
-	void InitializeDefaultAttributes() const;
+	virtual void InitializeDefaultAttributes() const;
 	
 #pragma region  AbilitySystemVariables
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
