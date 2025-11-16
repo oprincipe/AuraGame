@@ -52,6 +52,11 @@ FVector AAuraCharacterBase::GetCombatSocketLocation()
 	return GetMesh()->GetSocketLocation(WeaponTipSocketName);
 }
 
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation() const
+{
+	return HitReactMontage;
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 	// Extended on child classes

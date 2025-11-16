@@ -27,6 +27,7 @@ public:
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel() const override;
 	virtual FVector GetCombatSocketLocation() override;
+	virtual UAnimMontage* GetHitReactMontage_Implementation() const override;
 	// End ICombatInterface
 	
 protected:
@@ -70,4 +71,6 @@ private:
 	UPROPERTY(EditAnywhere, Category="Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

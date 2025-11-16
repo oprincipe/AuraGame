@@ -25,6 +25,8 @@ public:
 	virtual int32 GetPlayerLevel() const override;
 	// End ICombatInterface
 	
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	
 #pragma region IEnemyInterface
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
@@ -35,6 +37,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	bool bHitReacting = false;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = 250.f;
 	
 protected:
 	virtual void BeginPlay() override;

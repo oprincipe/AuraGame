@@ -62,7 +62,7 @@ void AAuraProjectile::Destroyed()
 		LoopingSoundComponent->DestroyComponent();
 	}
 	
-	// Call parent class's Destroyed function to complete the destruction process
+	// Call the parent class Destroyed function to complete the destruction process
 	Super::Destroyed();
 }
 
@@ -75,7 +75,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// On server (authority), destroy the projectile
 	if (HasAuthority())
 	{
-		// Get the Ability System Component from the actor hit by projectile
+		// Get the Ability System Component from the actor hit by the projectile
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
 			// Apply the damage gameplay effect to the hit actor's ASC using the effect spec handle stored during projectile spawn
