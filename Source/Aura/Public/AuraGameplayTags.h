@@ -51,7 +51,13 @@ public:
 	FGameplayTag InputTag_2;
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
+	
+	// Caller Attributes
+	FGameplayTag Damage;
 
+	// Effect Attributes
+	FGameplayTag Effects_HitReact;
+	
 private:
 	static FAuraGameplayTags GameplayTags;
 };

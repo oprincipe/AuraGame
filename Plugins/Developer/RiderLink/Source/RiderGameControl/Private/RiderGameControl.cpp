@@ -60,7 +60,7 @@ static EPlayModeType PlayModeFromInt(int ModeNumber)
     case 3: return PlayMode_InVR;
     case 4: return PlayMode_InNewProcess;
     case 5: return PlayMode_Simulate;
-    case 6: return PlayMode_InVulkanPreview;
+    // case 6: return PlayMode_InVulkanPreview;
     }
     return PlayMode_InViewPort;
 }
@@ -77,7 +77,7 @@ static int PlayModeToInt(EPlayModeType modeType)
     case PlayMode_InVR: return 3;
     case PlayMode_InNewProcess: return 4;
     case PlayMode_Simulate: return 5;
-    case PlayMode_InVulkanPreview: return 6;
+    // case PlayMode_InVulkanPreview: return 6;
     }
     return 0;
 }
