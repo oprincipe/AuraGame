@@ -35,14 +35,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "RemoteControl",
-			"Enabled": true
-		},
-		{
-			"Name": "RemoteControlWebInterface",
-			"Enabled": true
-		},
-		{
 			"Name": "AIAssistant",
 			"Enabled": true
 		}
