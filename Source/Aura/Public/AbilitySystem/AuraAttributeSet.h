@@ -21,26 +21,28 @@ struct FEffectProperties
 
 	UPROPERTY(EditAnywhere) UAbilitySystemComponent* SourceASC = nullptr;
 	UPROPERTY(EditAnywhere) AActor* SourceAvatarActor = nullptr;
-	UPROPERTY(EditAnywhere) AActor* TargetAvatarActor = nullptr;
-	
 	UPROPERTY(EditAnywhere) AController* SourceController = nullptr;
-	UPROPERTY(EditAnywhere) AController* TargetController = nullptr;
-	
 	UPROPERTY(EditAnywhere) ACharacter* SourceCharacter = nullptr;
+	
+	UPROPERTY(EditAnywhere) UAbilitySystemComponent* TargetASC = nullptr;
+	UPROPERTY(EditAnywhere) AActor* TargetAvatarActor = nullptr;
+	UPROPERTY(EditAnywhere) AController* TargetController = nullptr;
 	UPROPERTY(EditAnywhere) ACharacter* TargetCharacter = nullptr;
 	
 	UPROPERTY(EditAnywhere) FGameplayEffectContextHandle EffectContextHandle;
 
 	FEffectProperties(){}
-	FEffectProperties(UAbilitySystemComponent* InASC, AActor* InSourceAvatarActor, AActor* InTargetAvatarActor,
-		AController* InSourceController, AController* InTargetController,
-		ACharacter* InSourceCharacter, ACharacter* InTargetCharacter, FGameplayEffectContextHandle InEffectContextHandle):
-	SourceASC(InASC),
+	FEffectProperties(
+		UAbilitySystemComponent* InSourceASC, AActor* InSourceAvatarActor, AController* InSourceController, ACharacter* InSourceCharacter, 
+		UAbilitySystemComponent* InTargetASC, AActor* InTargetAvatarActor, AController* InTargetController, ACharacter* InTargetCharacter,
+		const FGameplayEffectContextHandle& InEffectContextHandle):
+	SourceASC(InSourceASC),
 	SourceAvatarActor(InSourceAvatarActor),
-	TargetAvatarActor(InTargetAvatarActor),
 	SourceController(InSourceController),
-	TargetController(InTargetController),
 	SourceCharacter(InSourceCharacter),
+	TargetASC(InTargetASC),
+	TargetAvatarActor(InTargetAvatarActor),
+	TargetController(InTargetController),
 	TargetCharacter(InTargetCharacter),
 	EffectContextHandle(InEffectContextHandle)
 	{};

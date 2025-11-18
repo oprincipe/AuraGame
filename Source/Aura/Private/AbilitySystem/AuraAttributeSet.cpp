@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/AuraAttributeSet.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
@@ -115,6 +116,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		{
 			Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 			Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+			Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 		}
 	}
 }
@@ -146,6 +148,14 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			
 			const bool bFatal = NewHealth <= 0.f;
+			if (!bFatal)
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				
+				// todo: fix with target asc - Lesson 137 min: 9.32 ?
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
 			
 		}
 	}
