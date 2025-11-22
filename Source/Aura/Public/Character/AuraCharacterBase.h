@@ -52,10 +52,24 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Materials")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Materials")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+	
 	virtual void InitAbilityActorInfo();
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	virtual void InitializeDefaultAttributes() const;
+	
+	void Dissolve();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	
 #pragma region  AbilitySystemVariables
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;

@@ -76,7 +76,7 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+	Dissolve();
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()
@@ -101,6 +101,31 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultPrimaryAttributes, GetPlayerLevel());
 	ApplyEffectToSelf(DefaultSecondaryAttributes, GetPlayerLevel());
 	ApplyEffectToSelf(DefaultVitalAttributes, GetPlayerLevel());
+}
+
+void AAuraCharacterBase::Dissolve()
+{
+	if (IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		const int32 NumMaterials = GetMesh()->GetNumMaterials();
+		for (int i = 0; i < NumMaterials; ++i)
+		{
+			GetMesh()->SetMaterial(i, DynamicMatInst);
+		}
+		StartDissolveTimeline(DynamicMatInst);
+	}
+	
+	if (Weapon && IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* WeaponDynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		const int32 NumMaterials = Weapon->GetNumMaterials();
+		for (int i = 0; i < NumMaterials; ++i)
+		{
+			Weapon->SetMaterial(i, WeaponDynamicMatInst);
+		}
+		StartWeaponDissolveTimeline(WeaponDynamicMatInst);
+	}
 }
 
 /**
