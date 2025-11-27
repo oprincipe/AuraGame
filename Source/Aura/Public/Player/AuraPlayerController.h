@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class UDamageTextWidgetComponent;
 class USplineComponent;
 class UAuraAbilitySystemComponent;
 class UAuraInputConfig;
@@ -51,6 +52,9 @@ private:
 	TScriptInterface<IEnemyInterface> ThisActor;
 	FHitResult CursorHit;
 
+	UPROPERTY(EditDefaultsOnly, Category="Widget Components")
+	TSubclassOf<UDamageTextWidgetComponent> DamageTextWidgetComponentClass;
+	
 	/** Movement logic */
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
@@ -61,8 +65,7 @@ private:
 	UPROPERTY(VisibleAnywhere) TObjectPtr<USplineComponent> Spline;
 	/** End movement logic */
 	void Move(const FInputActionValue& InputActionValue);
-
-
+	
 	/** Shift logic */
 	bool bShiftDown = false;
 	void ShiftPressed() { bShiftDown = true; };
@@ -77,4 +80,7 @@ private:
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 	UAuraAbilitySystemComponent* GetASC();
 	
+public:
+	UFUNCTION(Client, Reliable)
+	void Client_ShowDamageNumber(const float DamageAmount, ACharacter* TargetCharacter);
 };

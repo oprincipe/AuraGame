@@ -11,8 +11,10 @@
 #include "NavigationSystem.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/EnemyInterface.h"
+#include "UI/Widget/DamageTextWidgetComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -201,4 +203,17 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 		return AuraAbilitySystemComponent;
 	}
 	return AuraAbilitySystemComponent;
+}
+
+void AAuraPlayerController::Client_ShowDamageNumber_Implementation(const float DamageAmount, ACharacter* TargetCharacter)
+{
+	if (!IsValid(TargetCharacter) || !DamageTextWidgetComponentClass) return;
+	
+	UDamageTextWidgetComponent* DamageText = NewObject<UDamageTextWidgetComponent>(TargetCharacter, DamageTextWidgetComponentClass);
+	if (!DamageText) return;
+	
+	DamageText->RegisterComponent();
+	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	DamageText->SetDamageText(DamageAmount);
 }
