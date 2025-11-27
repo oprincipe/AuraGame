@@ -75,7 +75,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
 	
 	// Armor penetration ignores a percentage of the target armor
-	const float EffectiveArmor = TargetArmor *= (100.f - SourceArmorPenetration * 0.25f) / 100.f;
+	const float EffectiveArmor = TargetArmor * (100.f - SourceArmorPenetration * 0.25f) / 100.f;
 	// Armor ignores a percentage of incoming damage
 	Damage += (100.f - EffectiveArmor * 0.333f) / 100.f;
 	
