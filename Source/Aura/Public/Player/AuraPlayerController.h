@@ -82,5 +82,5 @@ private:
 	
 public:
 	UFUNCTION(Client, Reliable)
-	void Client_ShowDamageNumber(const float DamageAmount, ACharacter* TargetCharacter);
+	void Client_ShowDamageNumber(const float DamageAmount, ACharacter* TargetCharacter, const bool bBlockedHit, const bool bCriticalHit);
 };
