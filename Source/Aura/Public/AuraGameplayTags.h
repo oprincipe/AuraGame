@@ -16,13 +16,13 @@ public:
 	static const FAuraGameplayTags& Get() { return GameplayTags; }
 	static void InitializeNativeGameplayTags();
 
-	// Primary attributes
+	/** Primary attributes */
 	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Intelligence;
 	FGameplayTag Attributes_Primary_Resilience;
 	FGameplayTag Attributes_Primary_Vigor;
 
-	// Secondary attributes
+	/** Secondary attributes */
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_ArmorPenetration;
 	FGameplayTag Attributes_Secondary_BlockChance;
@@ -34,17 +34,17 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
-	// Vital Attributes
+	/** Vital Attributes */
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Mana;
 
-	// Messages Attributes
+	/** Messages Attributes */
 	FGameplayTag Message_HealthPotion;
 	FGameplayTag Message_ManaPotion;
 	FGameplayTag Message_HealthCrystal;
 	FGameplayTag Message_ManaCrystal;
 	
-	// Input Tags
+	/** Input Tags */
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_1;
@@ -52,10 +52,12 @@ public:
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
 	
-	// Caller Attributes
+	/** Caller Attributes */
 	FGameplayTag Damage;
+	FGameplayTag Damage_Fire;
+	TArray<FGameplayTag> DamageTypes;
 
-	// Effect Attributes
+	/** Effect Attributes */
 	FGameplayTag Effects_HitReact;
 	
 private:
