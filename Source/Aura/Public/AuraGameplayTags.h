@@ -34,6 +34,12 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
+	/** Resistance Tags */
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Arcane;
+	FGameplayTag Attributes_Resistance_Physical;
+	
 	/** Vital Attributes */
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Mana;
@@ -55,7 +61,11 @@ public:
 	/** Caller Attributes */
 	FGameplayTag Damage;
 	FGameplayTag Damage_Fire;
-	TArray<FGameplayTag> DamageTypes;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Arcane;
+	FGameplayTag Damage_Physical;
+	
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 
 	/** Effect Attributes */
 	FGameplayTag Effects_HitReact;
