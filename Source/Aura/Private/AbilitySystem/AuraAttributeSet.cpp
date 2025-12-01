@@ -190,7 +190,7 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const f
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		// Avoid damage caused to self
-		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
 		{
 			if (bBlockedHit)
 			{

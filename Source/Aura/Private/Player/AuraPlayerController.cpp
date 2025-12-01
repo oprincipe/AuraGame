@@ -208,7 +208,8 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 void AAuraPlayerController::Client_ShowDamageNumber_Implementation(const float DamageAmount, ACharacter* TargetCharacter,
 	const bool bBlockedHit, const bool bCriticalHit)
 {
-	if (!IsValid(TargetCharacter) || !DamageTextWidgetComponentClass) return;
+	// IsLocalController will allow showing the widget only on the local controller
+	if (!IsValid(TargetCharacter) || !DamageTextWidgetComponentClass || !IsLocalController()) return;
 	
 	UDamageTextWidgetComponent* DamageText = NewObject<UDamageTextWidgetComponent>(TargetCharacter, DamageTextWidgetComponentClass);
 	if (!DamageText) return;
