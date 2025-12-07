@@ -70,7 +70,7 @@ void AAuraEnemy::BeginPlay()
 	
 	if (HasAuthority())
 	{
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
 	}
 
 	// Set the widget controller to the healthbar
@@ -157,4 +157,14 @@ void AAuraEnemy::UnHighlightActor()
 		Weapon->SetRenderCustomDepth(false);
 		Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	}
+}
+
+void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AAuraEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
 }

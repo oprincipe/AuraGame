@@ -57,6 +57,11 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation() const
 	return HitReactMontage;
 }
 
+UAnimMontage* AAuraCharacterBase::GetAttackMontage_Implementation() const
+{
+	return AttackMontage;
+}
+
 void AAuraCharacterBase::Die()
 {
 	const FDetachmentTransformRules DetachRules(EDetachmentRule::KeepWorld, true);
