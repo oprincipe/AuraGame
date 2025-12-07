@@ -42,7 +42,7 @@ int32 AAuraCharacterBase::GetPlayerLevel() const
 	return ICombatInterface::GetPlayerLevel();
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
 {
 	if (IsValid(Weapon) && Weapon->GetSkeletalMeshAsset())
 	{

@@ -26,7 +26,7 @@ public:
 
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel() const override;
-	virtual FVector GetCombatSocketLocation() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() const override;
 	virtual UAnimMontage* GetAttackMontage_Implementation() const override;
 	virtual void Die() override;
