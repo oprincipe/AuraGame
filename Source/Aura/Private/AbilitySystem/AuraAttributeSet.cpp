@@ -190,18 +190,21 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const f
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		// Avoid damage caused to self
-		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+		if (IsValid(Props.SourceCharacter))
 		{
-			if (bBlockedHit)
+			if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Blocked Hit: %f"), Damage));
-			}
-			if (bCriticalHit)
+				PC->Client_ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+				return;
+			}	
+		}
+		
+		if (IsValid(Props.TargetCharacter))
+		{
+			if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.TargetCharacter->Controller))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Critical Hit: %f"), Damage));
-			}
-			
-			PC->Client_ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+				PC->Client_ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+			}	
 		}
 	}
 }
