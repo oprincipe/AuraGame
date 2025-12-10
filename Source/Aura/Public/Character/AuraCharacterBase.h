@@ -30,6 +30,8 @@ public:
 	virtual UAnimMontage* GetHitReactMontage_Implementation() const override;
 	virtual UAnimMontage* GetAttackMontage_Implementation() const override;
 	virtual void Die() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
 	// End ICombatInterface
 	
 	UFUNCTION(NetMulticast, Reliable)
@@ -38,6 +40,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	bool bDead = false;
+	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 

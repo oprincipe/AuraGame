@@ -61,6 +61,16 @@ void AAuraEnemy::Die()
 	SetLifeSpan(LifeSpan);
 }
 
+bool AAuraEnemy::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* AAuraEnemy::GetAvatar_Implementation()
+{
+	return this;
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -167,4 +177,9 @@ void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
 AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 {
 	return CombatTarget;
+}
+
+float AAuraEnemy::GetDistanceToStopRadius_Implementation() const
+{
+	return DistanceToStopRadius;
 }
