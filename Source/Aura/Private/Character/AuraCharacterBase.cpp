@@ -7,7 +7,10 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Aura/Aura.h"
+#include "Components/AudioComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerController.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -104,6 +107,34 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	// Stop all montages
+	if (IsValid(AbilitySystemComponent))
+	{
+		AbilitySystemComponent->CurrentMontageStop();
+		AbilitySystemComponent->CancelAllAbilities();
+	}
+	
+	// 1) Stop movement completely
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->StopMovementImmediately();
+		MoveComp->DisableMovement();
+		MoveComp->Velocity = FVector::ZeroVector; // ensure no residual velocity drags the camera
+		MoveComp->SetComponentTickEnabled(false); // prevents further movement updates
+	}
+	
+	// 2) Stop any looping audio on the character (run loops, metasounds, etc.)
+	TArray<UAudioComponent*> AudioComponents;
+	GetComponents<UAudioComponent>(AudioComponents);
+	for (UAudioComponent* AC : AudioComponents)
+	{
+		if (IsValid(AC) && AC->IsPlaying())
+		{
+			AC->Stop();
+		}
+	}
+	
 	Dissolve();
 	bDead = true;
 }

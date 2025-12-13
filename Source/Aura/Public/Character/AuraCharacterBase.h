@@ -38,9 +38,9 @@ public:
 	virtual void MulticastHandleDeath();
 	
 protected:
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
 
-	bool bDead = false;
+    bool bDead = false;
 	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -74,13 +74,13 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	virtual void InitializeDefaultAttributes() const;
 	
-	void Dissolve();
+ void Dissolve();
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+ void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	
 #pragma region  AbilitySystemVariables
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -93,17 +93,17 @@ protected:
 	
 public:
 #pragma region  AbilitySystemPublicFunctions
-	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+    UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 #pragma endregion
 
-	
+    
 private:
 	UPROPERTY(EditAnywhere, Category="Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
-	UPROPERTY(EditAnywhere, Category="Combat")
-	TObjectPtr<UAnimMontage> HitReactMontage;
-	
-	UPROPERTY(EditAnywhere, Category="Combat")
-	TArray<FTaggedMontage> AttackMontages;
+    UPROPERTY(EditAnywhere, Category="Combat")
+    TObjectPtr<UAnimMontage> HitReactMontage;
+    
+    UPROPERTY(EditAnywhere, Category="Combat")
+    TArray<FTaggedMontage> AttackMontages;
 };
