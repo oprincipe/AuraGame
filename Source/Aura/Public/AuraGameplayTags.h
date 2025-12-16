@@ -68,10 +68,16 @@ public:
 	/** Attack Abilities */
 	FGameplayTag Abilities_Attack;
 	
-	/** Montages Tags */
-	FGameplayTag Montage_Attack_Weapon;
-	FGameplayTag Montage_Attack_Right_Hand;
-	FGameplayTag Montage_Attack_Left_Hand;
+	/** Combat Tags */
+	FGameplayTag CombatSocket_Weapon;
+	FGameplayTag CombatSocket_Right_Hand;
+	FGameplayTag CombatSocket_Left_Hand;
+	
+	/** Montage Tags */
+	FGameplayTag Montage_Attack_1;
+	FGameplayTag Montage_Attack_2;
+	FGameplayTag Montage_Attack_3;
+	FGameplayTag Montage_Attack_4;
 	
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 
