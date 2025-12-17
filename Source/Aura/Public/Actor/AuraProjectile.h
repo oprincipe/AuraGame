@@ -38,5 +38,5 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<USoundBase> LoopingSound;
 	UPROPERTY() TObjectPtr<UAudioComponent> LoopingSoundComponent;
 	
-	void PlayEffects() const;
+	void PlayEffects();
 };

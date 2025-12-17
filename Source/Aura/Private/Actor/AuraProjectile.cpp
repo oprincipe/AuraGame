@@ -99,10 +99,11 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void AAuraProjectile::PlayEffects() const
+void AAuraProjectile::PlayEffects()
 {
 	// Avoid playing twice the sounds
 	if (bHit) return;
+	bHit = true;
 		
 	if (ImpactSound)
 	{
