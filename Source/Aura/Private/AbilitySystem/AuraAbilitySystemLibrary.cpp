@@ -148,7 +148,7 @@ void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& C
 
 void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject,
 	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorToIgnore, const float Radius,
-	const FVector& SphereOrigin)
+	const FVector& SphereOrigin, const bool bDrawDebugSphere)
 {
 	// @see ApplyRadialDamageWithFalloff for example code
 	FCollisionQueryParams SphereParams;
@@ -162,6 +162,11 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		World->OverlapMultiByObjectType(Overlaps, SphereOrigin, FQuat::Identity, 
 			FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), 
 			FCollisionShape::MakeSphere(Radius), SphereParams);
+		
+		if (bDrawDebugSphere)
+		{
+			DrawDebugSphere(World, SphereOrigin, Radius, 10, FColor::Red, false, 5);
+		}
 		
 		for (const FOverlapResult& Overlap : Overlaps)
 		{
