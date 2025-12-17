@@ -35,6 +35,8 @@ public:
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() const override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) const override;
+	virtual int32 GetMinionCount_Implementation() const override;
+	virtual void IncrementMinionCount_Implementation(const int32 Amount) override;
 	// End ICombatInterface
 	
 	UFUNCTION(NetMulticast, Reliable)
@@ -45,6 +47,7 @@ protected:
 
     bool bDead = false;
 	
+	/** Combat Variables */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
@@ -66,6 +69,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	USoundBase* DeathSound;
 	
+	/** Minion Variables */
+	int32 MinionCount = 0;
+	
+	/** Attributes Variables */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
@@ -81,6 +88,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Materials")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 	
+	/** Functions */
 	virtual void InitAbilityActorInfo();
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;

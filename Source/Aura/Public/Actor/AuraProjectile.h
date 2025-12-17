@@ -23,6 +23,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true)) FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) TObjectPtr<USphereComponent> Sphere;
+	
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 
@@ -32,7 +34,6 @@ private:
 	bool bHit = false;
 	
 	UPROPERTY(EditDefaultsOnly) float LifeSpan = 15.0f;
-	UPROPERTY(VisibleAnywhere) TObjectPtr<USphereComponent> Sphere;
 	UPROPERTY(EditAnywhere) TObjectPtr<UNiagaraSystem> ImpactEffect;
 	UPROPERTY(EditAnywhere) TObjectPtr<USoundBase> ImpactSound;
 	UPROPERTY(EditAnywhere) TObjectPtr<USoundBase> LoopingSound;
