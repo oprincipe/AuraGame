@@ -18,7 +18,8 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag,
+	const bool bOverridePitch, const float PitchOverride)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
@@ -27,12 +28,17 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		GetAvatarActorFromActorInfo(),
 		SocketTag
 	);
-	const FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-	// Rotation.Pitch = 0.f; // Flight to the ground
+	
+	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	if (bOverridePitch)
+	{
+		Rotation.Pitch = PitchOverride;
+	}
 	
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation - FVector(0.f, 0.f, 10.f));
 	SpawnTransform.SetRotation(Rotation.Quaternion());
+	
 	
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
