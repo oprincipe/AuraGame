@@ -75,7 +75,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	
 	// Ignore friends
 	if (!UAuraAbilitySystemLibrary::IsNotFriend(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor)) return;
-	
+		
 	// Play impact effects (sound and visual) when projectile overlaps with something
 	PlayEffects();
 	
