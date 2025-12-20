@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AuraAbilityInfo.h"
 
 void UAuraOverlayWidgetController::BroadcastInitialValues()
 {
@@ -41,19 +42,48 @@ void UAuraOverlayWidgetController::BindCallbackToDependencies()
 		{
 			OnMaxManaChanged.Broadcast(Data.NewValue);
 		});
-
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTagsDelegate.
-		AddLambda([this](const FGameplayTagContainer& GameplayTags)
-		{
-			for (const FGameplayTag& Tag : GameplayTags)
-			{
-				// Load a root tag for messages
-				const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
-				if (!Tag.MatchesTag(MessageTag)) continue;
-
-				const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-				if (Row) OnMessageWidgetRow.Broadcast(*Row);
-			}
-		});
 	
+	if (UAuraAbilitySystemComponent* AuraABS = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		if (AuraABS->bStartupAbilitiesGiven)
+		{
+			// In case the ability has been already given, we don't need the delegate binding
+			OnInitializeStartupAbilities(AuraABS);
+		}
+		else
+		{
+			// Bind the delegate in case the ability has not been given yet
+			AuraABS->AbilitiesGivenDelegate.AddUObject(this, &UAuraOverlayWidgetController::OnInitializeStartupAbilities);
+		}
+		
+		AuraABS->EffectAssetTagsDelegate.
+			AddLambda([this](const FGameplayTagContainer& GameplayTags)
+			{
+				for (const FGameplayTag& Tag : GameplayTags)
+				{
+					// Load a root tag for messages
+					const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+					if (!Tag.MatchesTag(MessageTag)) continue;
+
+					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+					if (Row) OnMessageWidgetRow.Broadcast(*Row);
+				}
+			});
+	}
+}
+
+void UAuraOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* InAuraABS)
+{
+	if (!InAuraABS->bStartupAbilitiesGiven) return;
+	
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda([this, InAuraABS](const FGameplayAbilitySpec& AbilitySpec)
+	{
+		FAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(InAuraABS->GetAbilityTagFromSpec(AbilitySpec));
+		Info.InputTag = InAuraABS->GetInputTagFromSpec(AbilitySpec);
+		
+		AbilityInfoDelegate.Broadcast(Info);
+	});
+	
+	InAuraABS->ForEachAbility(BroadcastDelegate);
 }
