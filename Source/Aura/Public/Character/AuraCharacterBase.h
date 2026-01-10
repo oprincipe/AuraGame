@@ -27,7 +27,7 @@ public:
 	// End IAbilitySystemInterface
 
 	// Start ICombatInterface
-	virtual int32 GetPlayerLevel() const override;
+	virtual int32 GetPlayerLevel_Implementation() const override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() const override;
 	virtual void Die() override;

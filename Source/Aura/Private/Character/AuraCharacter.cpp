@@ -42,7 +42,7 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
-int32 AAuraCharacter::GetPlayerLevel() const
+int32 AAuraCharacter::GetPlayerLevel_Implementation() const
 {
 	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
@@ -54,6 +54,11 @@ void AAuraCharacter::AddToXP_Implementation(const int32 InXP)
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
 	AuraPlayerState->AddToXP(InXP);
+}
+
+void AAuraCharacter::LevelUp_Implementation()
+{
+	
 }
 
 void AAuraCharacter::InitAbilityActorInfo()

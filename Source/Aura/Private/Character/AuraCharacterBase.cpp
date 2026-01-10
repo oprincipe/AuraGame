@@ -41,10 +41,9 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-int32 AAuraCharacterBase::GetPlayerLevel() const
+int32 AAuraCharacterBase::GetPlayerLevel_Implementation() const
 {
-	// Extended on child classes
-	return ICombatInterface::GetPlayerLevel();
+	return 1;
 }
 
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)

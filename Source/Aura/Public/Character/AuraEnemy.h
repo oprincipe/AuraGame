@@ -24,7 +24,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	// Start ICombatInterface
-	virtual int32 GetPlayerLevel() const override;
+	virtual int32 GetPlayerLevel_Implementation() const override;
 	virtual void Die() override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
