@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -56,9 +57,54 @@ void AAuraCharacter::AddToXP_Implementation(const int32 InXP)
 	AuraPlayerState->AddToXP(InXP);
 }
 
+int32 AAuraCharacter::GetXP_Implementation() const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	return AuraPlayerState->GetXP();
+}
+
+int32 AAuraCharacter::FindLevelForXP_Implementation(const int32 InXP) const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	return AuraPlayerState->LevelUpInfo->FindLevelForXP(InXP);
+}
+
 void AAuraCharacter::LevelUp_Implementation()
 {
 	
+}
+
+int32 AAuraCharacter::GetAttributePointsReward_Implementation(const int32 InLevel) const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	return AuraPlayerState->LevelUpInfo->LevelUpInformation[InLevel].AttributePointAward;
+}
+
+int32 AAuraCharacter::GetSpellPointsReward_Implementation(const int32 InLevel) const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	return AuraPlayerState->LevelUpInfo->LevelUpInformation[InLevel].SpellPointAward;
+}
+
+void AAuraCharacter::AddToPlayerLevel_Implementation(const int32 InPlayerLevel)
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	AuraPlayerState->AddToLevel(InPlayerLevel);
+}
+
+void AAuraCharacter::AddToAttributePoints_Implementation(const int32 InAttributePoints)
+{
+	// TODO: Add AttributePoints to PlayerState
+}
+
+void AAuraCharacter::AddToSpellPoints_Implementation(const int32 InSpellPoints)
+{
+	// TODO: Add SpellPoints to PlayerState
 }
 
 void AAuraCharacter::InitAbilityActorInfo()
