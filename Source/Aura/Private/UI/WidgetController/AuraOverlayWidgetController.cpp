@@ -6,6 +6,8 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AuraAbilityInfo.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
+#include "Player/AuraPlayerState.h"
 
 void UAuraOverlayWidgetController::BroadcastInitialValues()
 {
@@ -18,7 +20,12 @@ void UAuraOverlayWidgetController::BroadcastInitialValues()
 
 void UAuraOverlayWidgetController::BindCallbackToDependencies()
 {
+	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	AuraPlayerState->OnXPChangeDelegate.AddUObject(this, &UAuraOverlayWidgetController::OnXPChanged);
+	
+	
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).
 		AddLambda([this](const FOnAttributeChangeData& Data)
 		{
@@ -86,4 +93,27 @@ void UAuraOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySyst
 	});
 	
 	InAuraABS->ForEachAbility(BroadcastDelegate);
+}
+
+void UAuraOverlayWidgetController::OnXPChanged(const int32 NewXP) const
+{
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	const ULevelUpInfo* LevelUpInfo = AuraPlayerState->LevelUpInfo;
+	checkf(LevelUpInfo, TEXT("AuraPlayerState has no LevelUpInfo assigned"));
+	
+	const int32 Level = LevelUpInfo->FindLevelForXP(NewXP);
+	const int32 MaxLevel = LevelUpInfo->LevelUpInformation.Num();
+	
+	// Delta of xp to the end of the level
+	if (Level <= MaxLevel && Level > 0)
+	{
+		const int32 LevelUpRequirement = LevelUpInfo->LevelUpInformation[Level].LevelUpRequirement;
+		const int32 PreviousLevelUpRequirement = LevelUpInfo->LevelUpInformation[Level - 1].LevelUpRequirement;
+		
+		const int32 DeltaLevelRequirement = LevelUpRequirement - PreviousLevelUpRequirement;
+		const int32 XPForThisLevel = NewXP - PreviousLevelUpRequirement;
+		
+		const float XPBarPercent = static_cast<float>(XPForThisLevel) / static_cast<float>(DeltaLevelRequirement);
+		OnXPPercentChangedDelegate.Broadcast(XPBarPercent);
+	}
 }
