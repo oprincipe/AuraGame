@@ -44,6 +44,9 @@ public:
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Mana;
 
+	/** Meta Attributes */
+	FGameplayTag Attributes_Meta_IncomingXP;
+	
 	/** Messages Attributes */
 	FGameplayTag Message_HealthPotion;
 	FGameplayTag Message_ManaPotion;

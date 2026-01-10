@@ -246,4 +246,5 @@ void AAuraCharacterBase::AddCharacterAbilities() const
 	if (!AuraASC) return;
 
 	AuraASC->AddCharacterAbilities(StartupAbilities);
+	AuraASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
 }
