@@ -204,9 +204,10 @@ void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> Ga
 
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
-	ApplyEffectToSelf(DefaultPrimaryAttributes, GetPlayerLevel());
-	ApplyEffectToSelf(DefaultSecondaryAttributes, GetPlayerLevel());
-	ApplyEffectToSelf(DefaultVitalAttributes, GetPlayerLevel());
+	const int32 PlayerLevel = ICombatInterface::Execute_GetPlayerLevel(this);
+	ApplyEffectToSelf(DefaultPrimaryAttributes, PlayerLevel);
+	ApplyEffectToSelf(DefaultSecondaryAttributes, PlayerLevel);
+	ApplyEffectToSelf(DefaultVitalAttributes, PlayerLevel);
 }
 
 void AAuraCharacterBase::Dissolve()
