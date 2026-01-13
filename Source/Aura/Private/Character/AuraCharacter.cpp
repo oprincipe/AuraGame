@@ -127,12 +127,37 @@ void AAuraCharacter::AddToPlayerLevel_Implementation(const int32 InPlayerLevel)
 
 void AAuraCharacter::AddToAttributePoints_Implementation(const int32 InAttributePoints)
 {
-	// TODO: Add AttributePoints to PlayerState
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	AuraPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void AAuraCharacter::AddToSpellPoints_Implementation(const int32 InSpellPoints)
 {
-	// TODO: Add SpellPoints to PlayerState
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	AuraPlayerState->AddToSpellPoints(InSpellPoints);
+}
+
+void AAuraCharacter::AddAttributePoints_Implementation(const int32 InAttributePoints)
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	AuraPlayerState->AddToAttributePoints(InAttributePoints);
+}
+
+int32 AAuraCharacter::GetAttributePoints_Implementation() const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	return AuraPlayerState->GetAttributePoints();
+}
+
+int32 AAuraCharacter::GetSpellPoints_Implementation() const
+{
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
+	return AuraPlayerState->GetSpellPoints();
 }
 
 void AAuraCharacter::InitAbilityActorInfo()
