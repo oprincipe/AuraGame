@@ -47,9 +47,6 @@ public:
 	int32 FindLevelForXP(const int32 InXP) const;
 	
 	UFUNCTION(BlueprintNativeEvent)
-	void LevelUp();
-	
-	UFUNCTION(BlueprintNativeEvent)
 	void AddAttributePoints(const int32 InAttributePoints);	
 
 	UFUNCTION(BlueprintNativeEvent)
@@ -61,5 +58,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	int32 GetSpellPoints() const;
 	
-
+	UFUNCTION(BlueprintNativeEvent)
+	void LevelUp();
 };
