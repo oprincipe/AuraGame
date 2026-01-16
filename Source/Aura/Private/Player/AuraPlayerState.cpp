@@ -71,6 +71,7 @@ void AAuraPlayerState::SetXP(const int32 InXP)
 
 void AAuraPlayerState::OnRep_Level(const int32& OldLevel) const
 {
+	if (Level <= 1) return;
 	OnLevelChangeDelegate.Broadcast(Level);
 }
 

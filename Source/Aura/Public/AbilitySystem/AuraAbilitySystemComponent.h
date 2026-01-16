@@ -11,7 +11,7 @@ class UAuraAbilitySystemComponent;
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTagContainer& /*AssetTags*/)
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
-
+DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChangedSignature, const FGameplayTag& /** Ability Tag */, const FGameplayTag& /** Status Tag */);
 
 /**
  * 
@@ -28,23 +28,32 @@ public:
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
+	
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+	
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 	
 	UFUNCTION(Server, Reliable)
 	void Server_UpgradeAttribute(const FGameplayTag& AttributeTag);
+	
+	void UpdateAbilityStatuses(const int32 Level);
 	
 	
 	bool bStartupAbilitiesGiven = false;
 	FEffectAssetTagsSignature EffectAssetTagsDelegate;
 	FAbilitiesGiven AbilitiesGivenDelegate;
+	FAbilityStatusChangedSignature AbilityStatusChangedDelegate;
 	
 protected:
 
 	UFUNCTION(Client, Reliable)
 	void Client_EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle) const;
+	
+	UFUNCTION(Client, Reliable)
+	void Client_UpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
 	
 	virtual void OnRep_ActivateAbilities() override;
 };
