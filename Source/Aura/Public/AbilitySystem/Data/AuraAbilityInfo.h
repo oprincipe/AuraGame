@@ -8,6 +8,8 @@
 #include "AuraAbilityInfo.generated.h"
 
 
+class UGameplayAbility;
+
 USTRUCT(BlueprintType)
 struct FAbilityInfo
 {
@@ -31,7 +33,11 @@ struct FAbilityInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UMaterialInterface> BackgroundMaterial = nullptr;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 LevelRequirement = 0;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayAbility> Ability = nullptr;
 };
 
 
