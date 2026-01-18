@@ -71,6 +71,7 @@ public:
 	FGameplayTag Damage_Physical;
 	
 	/** Attack Abilities */
+	FGameplayTag Abilities_None;
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
 	FGameplayTag Abilities_HitReact;
