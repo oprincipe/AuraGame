@@ -28,12 +28,15 @@ public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbackToDependencies() override;
 	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
-	FOnPlayerStatChangedSignature SpellPointsDelegate;
-	
 	UFUNCTION(BlueprintCallable, Category="GAS|Globe")
 	void SpellGlobeSelected(const FGameplayTag& AbilityTag);
 
+	UFUNCTION(BlueprintCallable, Category="GAS|Globe")
+	void SpendPointButtonPressed();
+	
+	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
+	FOnPlayerStatChangedSignature SpellPointsDelegate;
+	
 	UPROPERTY(BlueprintAssignable, Category="GAS|Globe")
 	FOnSpellGlobeSelectedSignature SpellGlobeSelectedDelegate;
 
