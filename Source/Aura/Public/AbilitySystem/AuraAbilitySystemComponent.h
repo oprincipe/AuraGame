@@ -34,8 +34,9 @@ public:
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	
-	void UpgradeAttribute(const FGameplayTag& AttributeTag);
+	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
 	
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 	UFUNCTION(Server, Reliable)
 	void Server_UpgradeAttribute(const FGameplayTag& AttributeTag);
 	void UpdateAbilityStatuses(const int32 Level);

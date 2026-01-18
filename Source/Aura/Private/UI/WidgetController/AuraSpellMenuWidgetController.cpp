@@ -24,7 +24,12 @@ void UAuraSpellMenuWidgetController::BindCallbackToDependencies()
 			bool bEnableSpellPointsButton = false;
 			bool bEnableEquipButton = false;
 			ShouldEnableButtons(StatusTag, CurrentSpellPoints, bEnableSpellPointsButton, bEnableEquipButton);
-			SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPointsButton, bEnableEquipButton);
+			
+			FString AbilityDescription;
+			FString AbilityNextLevelDescription;
+			GetAuraAbilitySystemComponent()->GetDescriptionsByAbilityTag(AbilityTag, AbilityDescription, AbilityNextLevelDescription);
+			
+			SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPointsButton, bEnableEquipButton, AbilityDescription, AbilityNextLevelDescription);
 		}
 		
 		if (AbilityInfo)
@@ -43,7 +48,12 @@ void UAuraSpellMenuWidgetController::BindCallbackToDependencies()
 		bool bEnableSpellPointsButton = false;
 		bool bEnableEquipButton = false;
 		ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bEnableSpellPointsButton, bEnableEquipButton);
-		SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPointsButton, bEnableEquipButton);
+		
+		FString AbilityDescription;
+		FString AbilityNextLevelDescription;
+		GetAuraAbilitySystemComponent()->GetDescriptionsByAbilityTag(SelectedAbility.Ability, AbilityDescription, AbilityNextLevelDescription);
+	
+		SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPointsButton, bEnableEquipButton, AbilityDescription, AbilityNextLevelDescription);
 	});
 }
 
@@ -74,7 +84,12 @@ void UAuraSpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& Abil
 	bool bEnableSpellPointsButton = false;
 	bool bEnableEquipButton = false;
 	ShouldEnableButtons(AbilityStatus, SpellPoints, bEnableSpellPointsButton, bEnableEquipButton);
-	SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPointsButton, bEnableEquipButton);
+	
+	FString AbilityDescription;
+	FString AbilityNextLevelDescription;
+	GetAuraAbilitySystemComponent()->GetDescriptionsByAbilityTag(AbilityTag, AbilityDescription, AbilityNextLevelDescription);
+	
+	SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPointsButton, bEnableEquipButton, AbilityDescription, AbilityNextLevelDescription);
 }
 
 void UAuraSpellMenuWidgetController::SpendPointButtonPressed()
