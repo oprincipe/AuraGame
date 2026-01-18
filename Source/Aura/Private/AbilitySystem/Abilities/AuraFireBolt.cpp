@@ -5,16 +5,17 @@
 
 #include "AuraGameplayTags.h"
 
-FString UAuraFireBolt::GetDescription(const int32 Level)
+FString UAuraFireBolt::GetDescription(const int32 Level, const FString& InTitle)
 {
 	const int32 Damage = GetDamageByDamageType(FAuraGameplayTags::Get().Damage_Fire, Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
-	
+
+	const FString Title = !InTitle.IsEmpty() ? InTitle : "FIRE BOLT";
 	if (Level == 1)
 	{
 		return FString::Printf(TEXT(
-			"<Title>FIRE BOLT</>"
+			"<Title>%s</>"
 			"\n\n"
 			
 			"<Small>Level: </><Level>%d</>"
@@ -29,6 +30,7 @@ FString UAuraFireBolt::GetDescription(const int32 Level)
 			"<Damage>%d</><Default> fire damage with "
 			"a chance to burn</>"),
 			
+			*Title,
 			Level,
 			ManaCost,
 			Cooldown,
@@ -37,7 +39,7 @@ FString UAuraFireBolt::GetDescription(const int32 Level)
 	}
 
 	return FString::Printf(TEXT(
-			"<Title>NEXT LEVEL:</>"
+			"<Title>%s:</>"
 			"\n\n"
 			
 			"<Small>Level: </><Level>%d</>"
@@ -52,6 +54,7 @@ FString UAuraFireBolt::GetDescription(const int32 Level)
 			"<Damage>%d</><Default> fire damage with "
 			"a chance to burn</>"),
 			
+			*Title,
 			Level,
 			ManaCost,
 			Cooldown,
@@ -62,5 +65,5 @@ FString UAuraFireBolt::GetDescription(const int32 Level)
 
 FString UAuraFireBolt::GetNextLevelDescription(const int32 Level)
 {
-	return GetDescription(Level + 1);
+	return GetDescription(Level + 1, "NEXT LEVEL");
 }
