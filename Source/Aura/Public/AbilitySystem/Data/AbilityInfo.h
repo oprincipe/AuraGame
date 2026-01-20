@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
-#include "AuraAbilityInfo.generated.h"
+#include "AbilityInfo.generated.h"
 
 
 class UGameplayAbility;

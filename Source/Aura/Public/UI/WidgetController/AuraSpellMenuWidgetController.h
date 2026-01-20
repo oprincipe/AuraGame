@@ -41,6 +41,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="GAS|Globe")
 	void EquipButtonPressed();
 	
+	UFUNCTION(BlueprintCallable, Category="GAS|Globe")
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
+	
+	UFUNCTION(BlueprintCallable, Category="GAS|Globe")
+	void SpellRowGlobePressed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityType);
+	
 	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
 	FOnPlayerStatChangedSignature SpellPointsDelegate;
 	
@@ -61,4 +67,5 @@ private:
 	int32 CurrentSpellPoints = 0;
 	
 	bool bWaitingForEquipSelection = false;
+	FGameplayTag SelectedSlot;
 };

@@ -1,7 +1,7 @@
 ﻿// Copyright NattySoft
 
 
-#include "AbilitySystem/Data/AuraAbilityInfo.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 #include "Aura/AuraLogChannel.h"
 
