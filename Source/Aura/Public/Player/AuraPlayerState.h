@@ -63,7 +63,7 @@ private:
 	UFUNCTION() 
 	void OnRep_Level(const int32& OldLevel) const;
 	
-	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Level) 
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_XP) 
 	int32 XP = 1;
 	UFUNCTION() 
 	void OnRep_XP(const int32 OldXP) const;

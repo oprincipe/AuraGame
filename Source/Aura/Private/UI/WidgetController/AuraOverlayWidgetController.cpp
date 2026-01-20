@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/AuraOverlayWidgetController.h"
 
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
@@ -24,32 +25,35 @@ void UAuraOverlayWidgetController::BindCallbackToDependencies()
 		OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
 	});
 	
-	GetAuraAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetHealthAttribute()).
+	if (UAuraAbilitySystemComponent* AuraABS = GetAuraAbilitySystemComponent())
+	{
+		AuraABS->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetHealthAttribute()).
 		AddLambda([this](const FOnAttributeChangeData& Data)
 		{
 			OnHealthChanged.Broadcast(Data.NewValue);
 		});
 
-	GetAuraAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetMaxHealthAttribute()).
-		AddLambda([this](const FOnAttributeChangeData& Data)
-		{
-			OnMaxHealthChanged.Broadcast(Data.NewValue);
-		});
+		AuraABS->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetMaxHealthAttribute()).
+			AddLambda([this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxHealthChanged.Broadcast(Data.NewValue);
+			});
 
-	GetAuraAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetManaAttribute()).
-		AddLambda([this](const FOnAttributeChangeData& Data)
-		{
-			OnManaChanged.Broadcast(Data.NewValue);
-		});
+		AuraABS->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetManaAttribute()).
+			AddLambda([this](const FOnAttributeChangeData& Data)
+			{
+				OnManaChanged.Broadcast(Data.NewValue);
+			});
 	
-	GetAuraAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetMaxManaAttribute()).
-		AddLambda([this](const FOnAttributeChangeData& Data)
-		{
-			OnMaxManaChanged.Broadcast(Data.NewValue);
-		});
-	
-	if (UAuraAbilitySystemComponent* AuraABS = GetAuraAbilitySystemComponent())
-	{
+		AuraABS->GetGameplayAttributeValueChangeDelegate(GetAuraAttributeSet()->GetMaxManaAttribute()).
+			AddLambda([this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxManaChanged.Broadcast(Data.NewValue);
+			});
+		
+		// Binding Equipped button pressed on the spell menu
+		AuraABS->AbilityEquippedDelegate.AddUObject(this, &UAuraOverlayWidgetController::OnAbilityEquipped);
+		
 		if (AuraABS->bStartupAbilitiesGiven)
 		{
 			// In case the ability has been already given, we don't need the delegate binding
@@ -97,4 +101,25 @@ void UAuraOverlayWidgetController::OnXPChanged(const int32 NewXP)
 		const float XPBarPercent = static_cast<float>(XPForThisLevel) / static_cast<float>(DeltaLevelRequirement);
 		OnXPPercentChangedDelegate.Broadcast(XPBarPercent);
 	}
+}
+
+void UAuraOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status,
+	const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const
+{
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+	
+	FAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = GameplayTags.Abilities_Status_Unlocked;
+	LastSlotInfo.InputTag = PreviousSlot;
+	LastSlotInfo.AbilityTag = GameplayTags.Abilities_None;
+	
+	// Broadcast empty info if the previous slot is a valid slot
+	// only if equipping an equipped spell
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+	
+	// Broadcast the current slot
+	FAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
+	Info.StatusTag = Status;
+	Info.InputTag = Slot;
+	AbilityInfoDelegate.Broadcast(Info);
 }

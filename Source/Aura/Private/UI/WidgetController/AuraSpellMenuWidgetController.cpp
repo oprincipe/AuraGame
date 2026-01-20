@@ -158,7 +158,8 @@ void UAuraSpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& Abili
 	
 	// Stop playing animations
 	StopWaitingForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoByTag(AbilityTag).AbilityType);
-	
+	SpellGlobeReassignedDelegate.Broadcast(AbilityTag);
+	GlobeDeselect();
 }
 
 void UAuraSpellMenuWidgetController::SpellRowGlobePressed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityType)
