@@ -62,15 +62,31 @@ public:
 	
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	bool IsBlockHit() const { return bIsBlockHit; }
+	bool IsSuccessfulDebuff() const { return bIsSuccessfulDebuff; }
+	float GetDebuffDamage() const { return DebuffDamage; }
+	float GetDebuffDuration() const { return DebuffDuration; }
+	float GetDebuffFrequency() const { return DebuffFrequency; }
+	TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
 	
 	void SetIsCriticalHit(const bool bInCriticalHit) { bIsCriticalHit = bInCriticalHit; }
 	void SetIsBlockHit(const bool bInBlockHit) { bIsBlockHit = bInBlockHit; }
+	void SetIsSuccessfulDebuff() { bIsSuccessfulDebuff = true; }
+	void SetDebuffDamage(const float Damage) { DebuffDamage = Damage; }
+	void SetDebuffDuration(const float Duration) { DebuffDuration = Duration; }
+	void SetDebuffFrequency(const float Frequency) { DebuffFrequency = Frequency; }
+	void SetDamageType(const FGameplayTag& Type) { DamageType = MakeShared<FGameplayTag>(Type); }
+
 	
 protected:
 
 	UPROPERTY() bool bIsBlockHit = false;
 	UPROPERTY() bool bIsCriticalHit = false;
+	UPROPERTY() bool bIsSuccessfulDebuff = false;
+	UPROPERTY() float DebuffDamage = 0.f;
+	UPROPERTY() float DebuffDuration = 0.f;
+	UPROPERTY() float DebuffFrequency = 0.f;
 	
+	TSharedPtr<FGameplayTag> DamageType;
 };
 
 /**
