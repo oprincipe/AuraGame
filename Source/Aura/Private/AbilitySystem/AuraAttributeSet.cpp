@@ -278,10 +278,10 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 	TagContainer.Added.AddTag(GameplayTags.DamageTypesToDebuff[DamageType]);
 	TargetTagComponent.SetAndApplyTargetTagChanges(TagContainer);
 	
-	// Note: Stacking configuration is not available for dynamically created effects in UE 5.7
-	// Consider using pre-made GameplayEffect assets if stacking behavior is needed
+	PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	// ReSharper disable once CppDeprecatedEntity
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 	Effect->StackLimitCount = 1;
 
 	const int32 Index = Effect->Modifiers.Num();

@@ -9,6 +9,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -39,7 +40,12 @@ public:
 	virtual int32 GetMinionCount_Implementation() const override;
 	virtual void IncrementMinionCount_Implementation(const int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() const override;
+	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
+	virtual FOnDeathSignature GetOnDeathDelegate() override;
 	// End ICombatInterface
+	
+	FOnASCRegisteredSignature OnASCRegisteredDelegate;
+	FOnDeathSignature OnDeathDelegate;
 	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
@@ -93,33 +99,30 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Materials")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
+	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffComponent;
+	
 	/** Functions */
 	virtual void InitAbilityActorInfo();
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	virtual void InitializeDefaultAttributes() const;
 	
- void Dissolve();
+	void Dissolve();
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	
 	UFUNCTION(BlueprintImplementableEvent)
- void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	
-#pragma region  AbilitySystemVariables
 	UPROPERTY() TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY() TObjectPtr<UAttributeSet> AttributeSet;
-#pragma endregion
 
-#pragma region  AbilitySystemProtectedFunctions
 	void AddCharacterAbilities() const;
-#pragma endregion 
 	
 public:
-#pragma region  AbilitySystemPublicFunctions
     UAttributeSet* GetAttributeSet() const { return AttributeSet; }
-#pragma endregion
 
     
 private:
