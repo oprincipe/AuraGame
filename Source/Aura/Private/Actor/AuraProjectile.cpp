@@ -52,32 +52,36 @@ void AAuraProjectile::BeginPlay()
 void AAuraProjectile::Destroyed()
 {
 	// On clients (non-authority), play impact effects if the projectile hasn't hit anything yet
-	if (!bHit && !HasAuthority())
-	{
-		PlayEffects();
-	}
+	if (!bHit && !HasAuthority()) OnHit();
+	Super::Destroyed();
+}
 
+void AAuraProjectile::OnHit()
+{
+	// Avoid playing twice the sounds
+	if (bHit) return;
+	bHit = true;
+	
+	PlayEffects();
 	if (LoopingSoundComponent)
 	{
 		LoopingSoundComponent->Stop();
 		LoopingSoundComponent->DestroyComponent();
 	}
-	
-	// Call the parent class Destroyed function to complete the destruction process
-	Super::Destroyed();
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-									  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Ignoring self
-	if (!DamageEffectSpecHandle.Data.IsValid() || DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) return;
+	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) return;
 	
 	// Ignore friends
-	if (!UAuraAbilitySystemLibrary::IsNotFriend(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor)) return;
-		
-	// Play impact effects (sound and visual) when projectile overlaps with something
-	PlayEffects();
+	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
+	
+	// Hit logic and Play impact effects (sound and visual) when projectile overlaps with something
+	if (!bHit) OnHit();
 	
 	// On server (authority), destroy the projectile
 	if (HasAuthority())
@@ -85,8 +89,11 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		// Get the Ability System Component from the actor hit by the projectile
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
+			// Here's where we know the target
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			
 			// Apply the damage gameplay effect to the hit actor's ASC using the effect spec handle stored during projectile spawn
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());	
+			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
 		
 		Destroy();
@@ -99,12 +106,8 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void AAuraProjectile::PlayEffects()
+void AAuraProjectile::PlayEffects() const
 {
-	// Avoid playing twice the sounds
-	if (bHit) return;
-	bHit = true;
-		
 	if (ImpactSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
