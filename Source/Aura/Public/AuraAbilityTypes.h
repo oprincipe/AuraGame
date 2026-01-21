@@ -70,11 +70,11 @@ public:
 	
 	void SetIsCriticalHit(const bool bInCriticalHit) { bIsCriticalHit = bInCriticalHit; }
 	void SetIsBlockHit(const bool bInBlockHit) { bIsBlockHit = bInBlockHit; }
-	void SetIsSuccessfulDebuff() { bIsSuccessfulDebuff = true; }
-	void SetDebuffDamage(const float Damage) { DebuffDamage = Damage; }
-	void SetDebuffDuration(const float Duration) { DebuffDuration = Duration; }
-	void SetDebuffFrequency(const float Frequency) { DebuffFrequency = Frequency; }
-	void SetDamageType(const FGameplayTag& Type) { DamageType = MakeShared<FGameplayTag>(Type); }
+	void SetIsSuccessfulDebuff(const bool bIsSuccessful) { bIsSuccessfulDebuff = bIsSuccessful; }
+	void SetDebuffDamage(const float InDamage) { DebuffDamage = InDamage; }
+	void SetDebuffDuration(const float InDuration) { DebuffDuration = InDuration; }
+	void SetDebuffFrequency(const float InFrequency) { DebuffFrequency = InFrequency; }
+	void SetDamageType(const TSharedPtr<FGameplayTag>& InDamageType) { DamageType = InDamageType; }
 
 	
 protected:
