@@ -59,23 +59,26 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 	{
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
 	}
+
+	const USkeletalMeshComponent* CharacterMesh = GetMesh();
+	if (!IsValid(CharacterMesh)) return FVector::ZeroVector;
 	
 	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Left_Hand))
 	{
-		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+		return CharacterMesh->GetSocketLocation(LeftHandSocketName);
 	}
 	
 	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Right_Hand))
 	{
-		return GetMesh()->GetSocketLocation(RightHandSocketName);
+		return CharacterMesh->GetSocketLocation(RightHandSocketName);
 	}
 	
 	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Tail))
 	{
-		return GetMesh()->GetSocketLocation(TailSocketName);
+		return CharacterMesh->GetSocketLocation(TailSocketName);
 	}
 	
-	return GetMesh()->GetSocketLocation(WeaponTipSocketName);
+	return CharacterMesh->GetSocketLocation(WeaponTipSocketName);
 }
 
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation() const
