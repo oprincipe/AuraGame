@@ -53,6 +53,11 @@ void AAuraProjectile::Destroyed()
 {
 	// On clients (non-authority), play impact effects if the projectile hasn't hit anything yet
 	if (!bHit && !HasAuthority()) OnHit();
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
 	Super::Destroyed();
 }
 
@@ -63,25 +68,24 @@ void AAuraProjectile::OnHit()
 	bHit = true;
 	
 	PlayEffects();
-	if (LoopingSoundComponent)
-	{
-		LoopingSoundComponent->Stop();
-		LoopingSoundComponent->DestroyComponent();
-	}
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Ignoring self
-	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
-	if (SourceAvatarActor == OtherActor) return;
 	
-	// Ignore friends
-	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
+	if (DamageEffectParams.SourceAbilitySystemComponent)
+	{
+		// Ignoring self
+		const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+		if (SourceAvatarActor == OtherActor) return;
 	
-	// Hit logic and Play impact effects (sound and visual) when projectile overlaps with something
-	if (!bHit) OnHit();
+		// Ignore friends
+		if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
+	
+		// Hit logic and Play impact effects (sound and visual) when projectile overlaps with something
+		if (!bHit) OnHit();
+	}
 	
 	// On server (authority), destroy the projectile
 	if (HasAuthority())
@@ -109,7 +113,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void AAuraProjectile::PlayEffects() const
+void AAuraProjectile::PlayEffects_Implementation() const
 {
 	if (ImpactSound)
 	{

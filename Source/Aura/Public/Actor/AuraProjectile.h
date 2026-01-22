@@ -41,5 +41,6 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<USoundBase> LoopingSound;
 	UPROPERTY() TObjectPtr<UAudioComponent> LoopingSoundComponent;
 	
+	UFUNCTION(NetMulticast, Reliable)
 	void PlayEffects() const;
 };

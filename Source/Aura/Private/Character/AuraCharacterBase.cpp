@@ -86,11 +86,11 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation() const
 	return HitReactMontage;
 }
 
-void AAuraCharacterBase::Die()
+void AAuraCharacterBase::Die(const FVector& DeathImpulse)
 {
 	const FDetachmentTransformRules DetachRules(EDetachmentRule::KeepWorld, true);
 	Weapon->DetachFromComponent(DetachRules);
-	MulticastHandleDeath();
+	MulticastHandleDeath(DeathImpulse);
 }
 
 bool AAuraCharacterBase::IsDead_Implementation() const
@@ -150,7 +150,7 @@ FOnDeathSignature AAuraCharacterBase::GetOnDeathDelegate()
 	return OnDeathDelegate;
 }
 
-void AAuraCharacterBase::MulticastHandleDeath_Implementation()
+void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
 {
 	if (DeathSound)
 	{
@@ -161,16 +161,27 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 		);
 	}
 	
-	Weapon->SetSimulatePhysics(true);
-	Weapon->SetEnableGravity(true);
-	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	if (Weapon)
+	{
+		Weapon->SetSimulatePhysics(true);
+		Weapon->SetEnableGravity(true);
+		Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		Weapon->AddImpulse(DeathImpulse * 0.1f, NAME_None, true);
+	}
+
+	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+	{
+		CharacterMesh->SetSimulatePhysics(true);
+		CharacterMesh->SetEnableGravity(true);
+		CharacterMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		CharacterMesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+		CharacterMesh->AddImpulse(DeathImpulse, NAME_None, true);
+	}
 	
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetEnableGravity(true);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (GetCapsuleComponent())
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 	
 	// Stop all montages
 	if (IsValid(AbilitySystemComponent))

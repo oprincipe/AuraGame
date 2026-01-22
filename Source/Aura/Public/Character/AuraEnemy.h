@@ -25,7 +25,7 @@ public:
 
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() const override;
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	// End ICombatInterface
