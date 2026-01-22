@@ -210,6 +210,12 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 		}
 	}
 	
+	// Eventually remove the debuf
+	if (BurnDebuffComponent)
+	{
+		BurnDebuffComponent->Deactivate();
+	}
+	
 	Dissolve();
 	bDead = true;
 	OnDeathDelegate.Broadcast(this);
