@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
@@ -103,6 +104,8 @@ void AAuraPlayerController::SetupInputComponent()
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	GEngine->AddOnScreenDebugMessage(0, .5f, FColor::Yellow, TEXT("Move"));
+	
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 	const FRotator Rotation = FRotator::ZeroRotator;
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -119,6 +122,7 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	bAutoRunning = false;
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
 		bTargeting = ThisActor ? true : false; // Check if the player is targeting an enemy
@@ -127,7 +131,7 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
-{
+{	
 	// Check if the input tag is not the LMB
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
@@ -158,6 +162,11 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 				bAutoRunning = true;
 			}
+			
+			if (ClickNiagaraSystem)
+			{
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			}
 		}
 		FollowTime = 0.f;
 		bTargeting = false;
@@ -166,6 +175,8 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
+	if (IsLookInputIgnored()) return;
+
 	// Check if the input tag is not the LMB
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
