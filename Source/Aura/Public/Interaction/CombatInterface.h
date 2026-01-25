@@ -80,6 +80,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClass GetCharacterClass() const;
 	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetInShopLoop(const bool InLoop);
+	
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature GetOnDeathDelegate() = 0;
 };

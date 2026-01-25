@@ -45,7 +45,7 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(
 }
 
 void UAuraAbilitySystemComponent::Client_UpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
-	const FGameplayTag& StatusTag, const int32 AbilityLevel)
+                                                                            const FGameplayTag& StatusTag, const int32 AbilityLevel)
 {
 	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
@@ -63,6 +63,46 @@ void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 	{
 		bStartupAbilitiesGiven = true;
 		AbilitiesGivenDelegate.Broadcast();
+	}
+}
+
+FPredictionKey UAuraAbilitySystemComponent::GetPredictionKeyFromAbilitySpec(
+	const FGameplayAbilitySpec& InAbilitySpec)
+{
+	// Get the prediction key from the ability instance (for instanced abilities)
+	if (TArray<UGameplayAbility*> Instances = InAbilitySpec.GetAbilityInstances(); Instances.Num() > 0)
+	{
+		const FGameplayAbilityActivationInfo& ActivationInfo = Instances.Last()->GetCurrentActivationInfoRef();
+		return  ActivationInfo.GetActivationPredictionKey();
+	}
+	return FPredictionKey();
+}
+
+void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+	
+	// loop for all activatable activities
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// Check if the tag matches
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		{
+			// Tell the ability that has been pressed
+			AbilitySpecInputPressed(AbilitySpec);
+			
+			// Activate the ability if it's not already active
+			if (AbilitySpec.IsActive())
+			{
+				// Get the prediction key from the ability instance (for instanced abilities)
+				const FPredictionKey PredictionKey = GetPredictionKeyFromAbilitySpec(AbilitySpec);
+				InvokeReplicatedEvent(
+					EAbilityGenericReplicatedEvent::InputPressed,
+					AbilitySpec.Handle,
+					PredictionKey
+				);
+			}
+		}
 	}
 }
 
@@ -96,10 +136,18 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		// Check if the tag matches
-		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag) && AbilitySpec.IsActive())
 		{
 			// Tell the ability that has been released
 			AbilitySpecInputReleased(AbilitySpec);
+
+			// Get the prediction key from the ability instance (for instanced abilities)
+			const FPredictionKey PredictionKey = GetPredictionKeyFromAbilitySpec(AbilitySpec);
+			InvokeReplicatedEvent(
+				EAbilityGenericReplicatedEvent::InputReleased,
+				AbilitySpec.Handle,
+				PredictionKey
+			);
 		}
 	}
 }
