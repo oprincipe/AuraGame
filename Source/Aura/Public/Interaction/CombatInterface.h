@@ -48,6 +48,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FName GetWeaponSocketName();
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& TargetLocation);
 	
@@ -85,4 +88,7 @@ public:
 	
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature GetOnDeathDelegate() = 0;
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	USkeletalMeshComponent* GetWeapon() const;
 };

@@ -30,6 +30,7 @@ public:
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() const override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
+	virtual FName GetWeaponSocketName_Implementation() override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() const override;
 	virtual void Die(const FVector& DeathImpulse) override;
 	virtual bool IsDead_Implementation() const override;
@@ -42,6 +43,7 @@ public:
 	virtual ECharacterClass GetCharacterClass_Implementation() const override;
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
 	virtual FOnDeathSignature GetOnDeathDelegate() override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() const override;
 	// End ICombatInterface
 	
 	FOnASCRegisteredSignature OnASCRegisteredDelegate;

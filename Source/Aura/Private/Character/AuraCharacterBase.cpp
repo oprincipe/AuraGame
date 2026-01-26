@@ -81,6 +81,11 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 	return CharacterMesh->GetSocketLocation(WeaponTipSocketName);
 }
 
+FName AAuraCharacterBase::GetWeaponSocketName_Implementation()
+{
+	return WeaponTipSocketName;
+}
+
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation() const
 {
 	return HitReactMontage;
@@ -148,6 +153,16 @@ FOnASCRegisteredSignature AAuraCharacterBase::GetOnASCRegisteredDelegate()
 FOnDeathSignature AAuraCharacterBase::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
+}
+
+USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation() const
+{
+	if (Weapon == nullptr || Weapon->GetSkeletalMeshAsset() == nullptr)
+	{
+		return GetMesh();
+	}
+	
+	return Weapon;
 }
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
