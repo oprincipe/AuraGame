@@ -4,6 +4,7 @@
 #include "AbilitySystem/AbilityTasks/AuraTargetDataUnderMouse.h"
 
 #include "AbilitySystemComponent.h"
+#include "Aura/Aura.h"
 
 UAuraTargetDataUnderMouse* UAuraTargetDataUnderMouse::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
 {
@@ -55,7 +56,7 @@ void UAuraTargetDataUnderMouse::SendMouseCursorData()
 
 	// Perform line trace under mouse cursor to get the hit result
 	FHitResult CursorHit;
-	PC->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, CursorHit);
+	PC->GetHitResultUnderCursor(ECC_Target, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 
 	// Create a scoped prediction window for client-side prediction
@@ -69,8 +70,8 @@ void UAuraTargetDataUnderMouse::SendMouseCursorData()
 	FGameplayAbilityTargetDataHandle DataHandle;
 	DataHandle.Add(Data);
 	
-	// Send target data to server for replication
-	FGameplayTag ApplicationTag;
+	// Send target data to the server for replication
+	const FGameplayTag ApplicationTag;
 	AbilitySystemComponent->ServerSetReplicatedTargetData(
 		GetAbilitySpecHandle(),
 		GetActivationPredictionKey(),
