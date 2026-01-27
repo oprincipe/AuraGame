@@ -332,6 +332,40 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 	
 }
 
+void UAuraAbilitySystemLibrary::GetClosestTargets(const int32 MaxTargets, const TArray<AActor*>& Actors, TArray<AActor*>& OutClosestTargets, const FVector& Origin)
+{
+	if (Actors.Num() <= MaxTargets)
+	{
+		OutClosestTargets = Actors;
+		return;
+	}
+	
+	TArray<TPair<double, AActor*>> DistancePairs;
+	DistancePairs.SetNumUninitialized(Actors.Num());
+
+	for (int32 i = 0; i < Actors.Num(); ++i)
+	{
+		const double DistanceSq = FVector::DistSquared(Origin, Actors[i]->GetActorLocation());
+		DistancePairs[i] = TPair<double, AActor*>(DistanceSq, Actors[i]);
+	}
+
+	const int32 NumToFind = FMath::Min(MaxTargets, DistancePairs.Num());
+
+	std::nth_element(DistancePairs.GetData(), 
+				 DistancePairs.GetData() + NumToFind, 
+				 DistancePairs.GetData() + DistancePairs.Num(),
+	[](const TPair<double, AActor*>& A, const TPair<double, AActor*>& B)
+	{
+		return A.Key < B.Key;
+	});
+
+	OutClosestTargets.Reserve(NumToFind);
+	for (int32 i = 0; i < NumToFind; ++i)
+	{
+		OutClosestTargets.Add(DistancePairs[i].Value);
+	}
+}
+
 bool UAuraAbilitySystemLibrary::IsNotFriend(const AActor* FirstActor, const AActor* SecondActor)
 {
 	if (FirstActor->ActorHasTag(FName("Player")) && SecondActor->ActorHasTag(FName("Player")))
