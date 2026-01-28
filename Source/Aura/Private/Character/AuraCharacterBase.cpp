@@ -150,7 +150,7 @@ FOnASCRegisteredSignature AAuraCharacterBase::GetOnASCRegisteredDelegate()
 	return OnASCRegisteredDelegate;
 }
 
-FOnDeathSignature AAuraCharacterBase::GetOnDeathDelegate()
+FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
 }
@@ -225,7 +225,7 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 		}
 	}
 	
-	// Eventually remove the debuf
+	// Eventually remove the debuff
 	if (BurnDebuffComponent)
 	{
 		BurnDebuffComponent->Deactivate();
