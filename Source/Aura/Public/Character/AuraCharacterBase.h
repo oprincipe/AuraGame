@@ -23,6 +23,8 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	// Start IAbilitySystemInterface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	// End IAbilitySystemInterface
@@ -52,9 +54,15 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
 	
+	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
+	bool bIsStunned = false;
+	
+	UFUNCTION()
+	virtual void OnRep_Stunned();
+	
 protected:
     virtual void BeginPlay() override;
-
+	
     bool bDead = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
@@ -81,6 +89,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	USoundBase* DeathSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = 250.f;
 	
 	/** Minion Variables */
 	int32 MinionCount = 0;
@@ -122,6 +133,7 @@ protected:
 	UPROPERTY() TObjectPtr<UAttributeSet> AttributeSet;
 
 	void AddCharacterAbilities() const;
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	
 public:
     UAttributeSet* GetAttributeSet() const { return AttributeSet; }

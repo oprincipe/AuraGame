@@ -21,9 +21,11 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+	virtual void OnRep_Stunned() override;
 
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() const override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	// End ICombatInterface
 	
 	// Start IPlayerInterface

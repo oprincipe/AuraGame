@@ -4,6 +4,7 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 #include "NiagaraComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
@@ -40,6 +41,8 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationRoll = false;
 	
 	CharacterClass = ECharacterClass::Elementalist;
+	
+	BaseWalkSpeed = 600.f;
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -59,11 +62,44 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+void AAuraCharacter::OnRep_Stunned()
+{
+	if (UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		FGameplayTagContainer BlockedTags;
+		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+		BlockedTags.AddTag(GameplayTags.Player_Block_CursorTrace);
+		BlockedTags.AddTag(GameplayTags.Player_Block_InputHeld);
+		BlockedTags.AddTag(GameplayTags.Player_Block_InputPressed);
+		BlockedTags.AddTag(GameplayTags.Player_Block_InputReleased);
+		if (bIsStunned)
+		{
+			ASC->AddLooseGameplayTags(BlockedTags);
+		}
+		else
+		{
+			ASC->RemoveLooseGameplayTags(BlockedTags);
+		}
+	}
+	
+}
+
 int32 AAuraCharacter::GetPlayerLevel_Implementation() const
 {
 	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	checkf(AuraPlayerState, TEXT("PlayerState is not set"));
 	return AuraPlayerState->GetPlayerLevel();
+}
+
+FVector AAuraCharacter::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
+{
+	const USkeletalMeshComponent* WeaponMesh = Execute_GetWeapon(this);
+	if (IsValid(WeaponMesh) && WeaponMesh->GetSkeletalMeshAsset())
+	{
+		return  WeaponMesh->GetSocketLocation(WeaponTipSocketName);
+	}
+	
+	return Super::GetCombatSocketLocation_Implementation(MontageTag);
 }
 
 void AAuraCharacter::AddToXP_Implementation(const int32 InXP)
@@ -176,7 +212,11 @@ void AAuraCharacter::InitAbilityActorInfo()
 	
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	OnASCRegisteredDelegate.Broadcast(AbilitySystemComponent);
-
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(
+			this,
+			&AAuraCharacter::StunTagChanged
+		);
+	
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
 		if (AAuraHUD* AuraHUD = Cast<AAuraHUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
