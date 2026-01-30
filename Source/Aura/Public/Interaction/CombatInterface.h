@@ -86,7 +86,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SetInShopLoop(const bool InLoop);
 	
-	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
+	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

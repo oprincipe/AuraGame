@@ -43,7 +43,7 @@ public:
 	virtual int32 GetMinionCount_Implementation() const override;
 	virtual void IncrementMinionCount_Implementation(const int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() const override;
-	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
+	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() override;
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() const override;
 	// End ICombatInterface
@@ -54,11 +54,14 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
 	
+	UPROPERTY(ReplicatedUsing=OnRep_Burned, BlueprintReadOnly)
+	bool bIsBurned = false;
+	
 	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
 	bool bIsStunned = false;
 	
-	UFUNCTION()
-	virtual void OnRep_Stunned();
+	UFUNCTION() virtual void OnRep_Burned();
+	UFUNCTION() virtual void OnRep_Stunned();
 	
 protected:
     virtual void BeginPlay() override;
@@ -114,6 +117,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
 	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
+	TObjectPtr<UAuraDebuffNiagaraComponent> StunDebuffComponent;
 	
 	/** Functions */
 	virtual void InitAbilityActorInfo();
