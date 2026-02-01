@@ -9,6 +9,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraPassiveNiagaraComponent;
 class UAuraDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
@@ -23,6 +24,7 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	// Start IAbilitySystemInterface
@@ -125,6 +127,18 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
 	TObjectPtr<UAuraDebuffNiagaraComponent> StunDebuffComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
+	TObjectPtr<UAuraPassiveNiagaraComponent> HaloOfProtectionNiagaraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
+	TObjectPtr<UAuraPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
+	TObjectPtr<UAuraPassiveNiagaraComponent> ManaSiphonNiagaraComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="FX")
+	TObjectPtr<USceneComponent> EffectAttachComponent;
 	
 	/** Functions */
 	virtual void InitAbilityActorInfo();

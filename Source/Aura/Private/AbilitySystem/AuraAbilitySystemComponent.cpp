@@ -241,8 +241,14 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 	}
 }
 
+void UAuraAbilitySystemComponent::Multicast_ActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag,
+	const bool bActivate)
+{
+	ActivatePassiveEffectDelegate.Broadcast(AbilityTag, bActivate);
+}
+
 void UAuraAbilitySystemComponent::Server_EquipAbility_Implementation(const FGameplayTag& AbilityTag,
-	const FGameplayTag& SlotTag)
+                                                                     const FGameplayTag& SlotTag)
 {
 	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
 	{
@@ -278,6 +284,7 @@ void UAuraAbilitySystemComponent::Server_EquipAbility_Implementation(const FGame
 				if (IsPassiveAbility(*SpecWithSlot))
 				{
 					// Send the delegate to remove the passive ability
+					Multicast_ActivatePassiveEffect(GetAbilityTagFromSpec(*SpecWithSlot), false);
 					DeactivatePassiveAbilityDelegate.Broadcast(GetAbilityTagFromSpec(*SpecWithSlot));
 				}
 				
@@ -291,6 +298,7 @@ void UAuraAbilitySystemComponent::Server_EquipAbility_Implementation(const FGame
 			if (IsPassiveAbility(*AbilitySpec))
 			{
 				TryActivateAbility(AbilitySpec->Handle);
+				Multicast_ActivatePassiveEffect(AbilityTag, true);
 			}
 		}
 		

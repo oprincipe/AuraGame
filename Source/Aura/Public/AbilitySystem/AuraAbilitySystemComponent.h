@@ -14,6 +14,7 @@ DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGameplayTag& /** Ability Tag */, const FGameplayTag& /** Status Tag */, const int32 /** Ability Level */);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquippedSignature, const FGameplayTag& /** Ability Tag */, const FGameplayTag& /** Status */, const FGameplayTag& /** Slot */, const FGameplayTag& /** Previous Slot */)
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbilitySignature, const FGameplayTag& /** Ability Tag */)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveEffect, const FGameplayTag& /** Ability Tag */, const bool /** Activated */)
 
 /**
  * 
@@ -60,6 +61,9 @@ public:
 	UFUNCTION(Server, Reliable)
 	void Server_EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& SlotTag);
 	
+	UFUNCTION(NetMulticast, Unreliable) 
+	void Multicast_ActivatePassiveEffect(const FGameplayTag& AbilityTag, const bool bActivate);
+	
 	bool bStartupAbilitiesGiven = false;
 	
 	/** Delegates */
@@ -68,6 +72,7 @@ public:
 	FAbilityStatusChangedSignature AbilityStatusChangedDelegate;
 	FAbilityEquippedSignature AbilityEquippedDelegate;
 	FDeactivatePassiveAbilitySignature DeactivatePassiveAbilityDelegate;
+	FActivatePassiveEffect ActivatePassiveEffectDelegate;
 	
 protected:
 
