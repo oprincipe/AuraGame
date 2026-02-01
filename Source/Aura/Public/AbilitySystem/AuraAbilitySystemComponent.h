@@ -34,13 +34,18 @@ public:
 	
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
+	FGameplayTag GetSlotFromAbilityTag(const FGameplayTag& AbilityTag);
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
-	void ClearSlot(FGameplayAbilitySpec* AbilitySpec);
+	static void ClearSlot(FGameplayAbilitySpec* AbilitySpec);
 	void ClearAbilitiesOnSlot(const FGameplayTag& Slot);
-	static bool AbilityHasSlot(const FGameplayAbilitySpec* Spec, const FGameplayTag& Slot);
+	static bool AbilityHasAnySlot(const FGameplayAbilitySpec& Spec);
+	static bool AbilityHasSlot(const FGameplayAbilitySpec& AbilitySpec, const FGameplayTag& Slot);
+	bool IsSlotEmpty(const FGameplayTag& Slot);
+	FGameplayAbilitySpec* GetSpecWithSlot(const FGameplayTag& Slot);
+	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
+	static void AssignSlotToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
 	
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
 	
@@ -80,3 +85,4 @@ protected:
 private:
 	static FPredictionKey GetPredictionKeyFromAbilitySpec(const FGameplayAbilitySpec& InAbilitySpec);
 };
+
