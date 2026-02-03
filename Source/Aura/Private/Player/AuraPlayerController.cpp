@@ -11,6 +11,8 @@
 #include "NavigationSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Actor/AuraMagicCircle.h"
+#include "Components/DecalComponent.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
@@ -28,6 +30,7 @@ void AAuraPlayerController::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	CursorTrace();
 	AutoRun();
+	UpdateMagicCircleLocation();
 }
 
 void AAuraPlayerController::AutoRun()
@@ -250,8 +253,36 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 	return AuraAbilitySystemComponent;
 }
 
+void AAuraPlayerController::UpdateMagicCircleLocation()
+{
+	if (!IsValid(MagicCircle)) return;
+	
+	MagicCircle->SetActorLocation(CursorHit.ImpactPoint);
+}
+
+void AAuraPlayerController::ShowMagicCircle(UMaterialInstance* DecalMaterial)
+{
+	if (!MagicCircleClass) return;
+	if (IsValid(MagicCircle)) return;
+	
+ 	MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircle>(MagicCircleClass);
+	if (DecalMaterial)
+	{
+		MagicCircle->MagicCircleDecal->SetMaterial(0, DecalMaterial);
+	}
+	
+}
+
+void AAuraPlayerController::HideMagicCircle()
+{
+	if (IsValid(MagicCircle))
+	{
+		MagicCircle->Destroy();
+	}
+}
+
 void AAuraPlayerController::Client_ShowDamageNumber_Implementation(const float DamageAmount, ACharacter* TargetCharacter,
-	const bool bBlockedHit, const bool bCriticalHit)
+                                                                   const bool bBlockedHit, const bool bCriticalHit)
 {
 	// IsLocalController will allow showing the widget only on the local controller
 	if (!IsValid(TargetCharacter) || !DamageTextWidgetComponentClass || !IsLocalController()) return;

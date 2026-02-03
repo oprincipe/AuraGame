@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class AAuraMagicCircle;
 class UNiagaraSystem;
 class UDamageTextWidgetComponent;
 class USplineComponent;
@@ -56,6 +57,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Widget Components")
 	TSubclassOf<UDamageTextWidgetComponent> DamageTextWidgetComponentClass;
 	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AAuraMagicCircle> MagicCircleClass;
+	
+	UPROPERTY()
+	TObjectPtr<AAuraMagicCircle> MagicCircle;
+	
 	/** Movement logic */
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
@@ -83,7 +90,16 @@ private:
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 	UAuraAbilitySystemComponent* GetASC();
 	
+	/** Magic Circle */
+	void UpdateMagicCircleLocation();
+	
 public:
 	UFUNCTION(Client, Reliable)
 	void Client_ShowDamageNumber(const float DamageAmount, ACharacter* TargetCharacter, const bool bBlockedHit, const bool bCriticalHit);
+	
+	UFUNCTION(BlueprintCallable)
+	void ShowMagicCircle(UMaterialInstance* DecalMaterial = nullptr);
+	
+	UFUNCTION(BlueprintCallable)
+	void HideMagicCircle();
 };

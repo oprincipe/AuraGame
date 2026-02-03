@@ -42,6 +42,8 @@ public:
 	virtual void AddAttributePoints_Implementation(const int32 InAttributePoints) override;
 	virtual int32 GetAttributePoints_Implementation() const override;
 	virtual int32 GetSpellPoints_Implementation() const override;
+	virtual void ShowMagicCircle_Implementation(UMaterialInstance* DecalMaterial = nullptr) override;
+	virtual void HideMagicCircle_Implementation() override;
 	// End IPlayerInterface
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
