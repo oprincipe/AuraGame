@@ -10,6 +10,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 struct AuraDamageStatics
 {
@@ -139,6 +140,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 	
+	// Get the Effect context to set the block or critical hit
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	
 	// Gather tags from source and target
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
@@ -170,6 +174,39 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		// Damage reduced by the resistance by a percent fraction of resistance
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
 		
+		// Check if we have to do radial damage
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+		{
+			// 1. override TakeDamage in AuraCharacterBase
+			// 2. create a delegate OnDamageDelegate, broadcast damage received in TakeDamage
+			// 3. bind a lambda to OnDamageDelegate on the Victim here (get delegate defined on Combat interface)
+			// 4. call ApplyRadialDamageWithFalloff to cause damage (this will result in TakeDamage being called
+			//    on the Victim, which will then broadcast OnDamageDelegate
+			// 5. in lambda, set DamageTypeValue to the damage received from the broadcast
+			
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
+			{
+				CombatInterface->GetOnDamageDelegate().AddLambda([&DamageTypeValue](const float DamageAmount)
+				{
+					DamageTypeValue += DamageAmount;
+				});
+			}
+			
+			UGameplayStatics::ApplyRadialDamageWithFalloff(
+				TargetAvatar,
+				DamageTypeValue,
+				0.f,
+				UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+				1.f,
+				UDamageType::StaticClass(),
+				TArray<AActor*>(),
+				SourceAvatar,
+				nullptr
+			);
+		}
+		
 		Damage += DamageTypeValue;
 	}
 	
@@ -182,8 +219,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
 	Damage = bBlocked ? Damage / 2.f : Damage;
 	
-	// Get the Effect context to set the block or critical hit
-	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	// Check if it's a blocking hit
 	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
 	
 	
