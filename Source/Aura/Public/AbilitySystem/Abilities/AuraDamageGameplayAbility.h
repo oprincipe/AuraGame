@@ -61,6 +61,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float KnockbackChance = 0.f;
 	
+	
+	/** Radial Damage Properties */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage") bool bIsRadialDamage = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage") float RadialDamageInnerRadius = 0.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage") float RadialDamageOuterRadius = 0.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage") FVector RadialDamageOrigin = FVector::ZeroVector;
+	
+	
 	UFUNCTION(BlueprintPure, Category="Damage")
 	static FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages);
 
