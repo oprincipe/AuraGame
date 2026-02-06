@@ -165,6 +165,10 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		
 		// Damage from this tag
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false);
+		if (DamageTypeValue <= 0.f)
+		{
+			continue;
+		}
 		
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[ResistanceTag];
 		float Resistance = 0.f;
