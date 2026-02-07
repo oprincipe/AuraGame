@@ -126,6 +126,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+	if (!IsValid(SourceAvatar) || !IsValid(TargetAvatar)) return;
 	
 	int32 SourcePlayerLevel = 1;
 	if (SourceAvatar->Implements<UCombatInterface>())
@@ -179,7 +180,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
 		
 		// Check if we have to do radial damage
-		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle) && IsValid(TargetAvatar))
 		{
 			// 1. override TakeDamage in AuraCharacterBase
 			// 2. create a delegate OnDamageDelegate, broadcast damage received in TakeDamage
