@@ -62,7 +62,7 @@ protected:
 	float DebuffDuration = 5.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
-	float DeathImpulseMagnitude = 12000.f;
+	float DeathImpulseMagnitude = 1000.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float KnockbackForceMagnitude = 1000.f;

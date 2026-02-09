@@ -75,18 +75,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	
-	if (DamageEffectParams.SourceAbilitySystemComponent)
-	{
-		// Ignoring self
-		const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
-		if (SourceAvatarActor == OtherActor) return;
+	if (!IsValidOverlap(OtherActor)) return;
 	
-		// Ignore friends
-		if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
-	
-		// Hit logic and Play impact effects (sound and visual) when projectile overlaps with something
-		if (!bHit) OnHit();
-	}
+	// Hit logic and Play impact effects (sound and visual) when projectile overlaps with something
+	if (!bHit) OnHit();
 	
 	// On server (authority), destroy the projectile
 	if (HasAuthority())
@@ -122,6 +114,20 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		bHit = true;
 	}
+}
+
+bool AAuraProjectile::IsValidOverlap(const AActor* OtherActor) const
+{
+	if (!DamageEffectParams.SourceAbilitySystemComponent) return false;
+	
+	// Ignoring self
+	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) return false;
+
+	// Ignore friends
+	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return false;
+	
+	return true;
 }
 
 void AAuraProjectile::PlayEffects_Implementation() const
