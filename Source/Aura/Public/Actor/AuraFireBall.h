@@ -26,4 +26,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartOutgoingTimeline();
 	
+	UPROPERTY(BlueprintReadWrite)
+	FDamageEffectParams ExplosionDamageParams;
 };
