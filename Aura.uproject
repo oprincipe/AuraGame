@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"GameplayAbilities",
-				"AIModule"
+				"AIModule",
+				"ModelViewViewModel"
 			]
 		}
 	],
@@ -37,6 +38,10 @@
 		},
 		{
 			"Name": "AIAssistant",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelViewViewModel",
 			"Enabled": true
 		}
 	],
