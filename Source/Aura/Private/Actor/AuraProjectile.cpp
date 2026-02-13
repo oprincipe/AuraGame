@@ -54,11 +54,7 @@ void AAuraProjectile::Destroyed()
 {
 	// On clients (non-authority), play impact effects if the projectile hasn't hit anything yet
 	if (!bHit && !HasAuthority()) OnHit();
-	if (LoopingSoundComponent)
-	{
-		LoopingSoundComponent->Stop();
-		LoopingSoundComponent->DestroyComponent();
-	}
+	StopSounds();
 	Super::Destroyed();
 }
 
@@ -128,6 +124,15 @@ bool AAuraProjectile::IsValidOverlap(const AActor* OtherActor) const
 	if (!UAuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return false;
 	
 	return true;
+}
+
+void AAuraProjectile::StopSounds() const
+{
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
 }
 
 void AAuraProjectile::PlayEffects_Implementation() const
