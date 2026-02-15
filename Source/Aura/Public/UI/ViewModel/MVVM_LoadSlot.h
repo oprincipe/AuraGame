@@ -18,12 +18,24 @@ class AURA_API UMVVM_LoadSlot : public UMVVMViewModelBase
 	GENERATED_BODY()
 	
 public:
+	void InitializeSlot();
+	
+	/** Setter and Getter Field Notifies */
+	void SetPlayerName(const FString& InPlayerName);
+	FString GetPlayerName() const { return PlayerName; }
+	
 	UPROPERTY(BlueprintAssignable)
 	FSetWidgetSwitcherIndex SetWidgetSwitcherIndex;
 	
-	UPROPERTY() FString PlayerName;
-	UPROPERTY() FString LoadSlotName;
-	UPROPERTY() FString SlotIndex;
+	UPROPERTY() 
+	FString LoadSlotName;
 	
-	void InitializeSlot();
+	UPROPERTY() 
+	FString SlotIndex;
+	
+	/** Field Notifies */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter) 
+	FString PlayerName;
+	
+	
 };
