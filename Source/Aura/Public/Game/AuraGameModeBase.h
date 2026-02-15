@@ -47,5 +47,6 @@ public:
 	void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
 	static void DeleteSlotData(const FString& SlotName, int32 SlotIndex);
 	UAuraLoadMenuSaveGame* GetSaveSlotData(const FString& SlotName, const int32 SlotIndex) const;
+	void TravelToMap(const UMVVM_LoadSlot* LoadSlot);
 	
 };

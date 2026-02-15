@@ -66,9 +66,21 @@ void UMVVM_LoadMenu::DeleteButtonPressed() const
 	SelectedSlot->EnableSelectSlotButton.Broadcast(true);
 }
 
+void UMVVM_LoadMenu::PlayButtonPressed() const
+{
+	if (!SelectedSlot) return;
+	
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!AuraGameMode) return;
+	
+	AuraGameMode->TravelToMap(SelectedSlot);
+}
+
 void UMVVM_LoadMenu::LoadData()
 {
 	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!AuraGameMode) return;
+	
 	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
 	{
 		const UAuraLoadMenuSaveGame* SaveObject = AuraGameMode->GetSaveSlotData(LoadSlot.Value->LoadSlotName, LoadSlot.Key);

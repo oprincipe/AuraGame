@@ -51,3 +51,11 @@ UAuraLoadMenuSaveGame* AAuraGameModeBase::GetSaveSlotData(const FString& SlotNam
 	UAuraLoadMenuSaveGame* LoadMenuSaveGame = Cast<UAuraLoadMenuSaveGame>(SaveGameObject);
 	return LoadMenuSaveGame;
 }
+
+void AAuraGameModeBase::TravelToMap(const UMVVM_LoadSlot* LoadSlot)
+{
+	const FString SlotName = LoadSlot->LoadSlotName;
+	const int32 SlotIndex = LoadSlot->SlotIndex;
+	
+	UGameplayStatics::OpenLevelBySoftObjectPtr(LoadSlot, Maps.FindChecked(LoadSlot->GetMapName()));
+}

@@ -44,6 +44,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DeleteButtonPressed() const;
 	
+	UFUNCTION(BlueprintCallable)
+	void PlayButtonPressed() const;
+	
 	void LoadData();
 	
 private:
