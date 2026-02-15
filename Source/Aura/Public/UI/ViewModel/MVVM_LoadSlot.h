@@ -20,11 +20,13 @@ class AURA_API UMVVM_LoadSlot : public UMVVMViewModelBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeSlot();
+	void InitializeSlot() const;
 	
 	/** Setter and Getter Field Notifies */
 	void SetPlayerName(const FString& InPlayerName);
 	FString GetPlayerName() const { return PlayerName; }
+	void SetMapName(const FString& InMapName);
+	FString GetMapName() const { return MapName; }
 	
 	/** Delegates */
 	UPROPERTY(BlueprintAssignable) FSetWidgetSwitcherIndex SetWidgetSwitcherIndex;
@@ -39,9 +41,12 @@ public:
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
 	
+private:
 	/** Field Notifies */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter) 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true")) 
 	FString PlayerName;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
+	FString MapName;
 	
 };

@@ -27,5 +27,6 @@ public:
 	UPROPERTY() FString SlotName = FString();
 	UPROPERTY() int32 SlotIndex = 0;
 	UPROPERTY() FString PlayerName = FString("Default");
+	UPROPERTY() FString MapName = FString("Default Map Name");
 	UPROPERTY() TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = Vacant;
 };
