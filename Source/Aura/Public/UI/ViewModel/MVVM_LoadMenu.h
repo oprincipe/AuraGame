@@ -41,6 +41,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotButtonPressed(const int32 SlotIndex);
 	
+	UFUNCTION(BlueprintCallable)
+	void DeleteButtonPressed() const;
+	
 	void LoadData();
 	
 private:
@@ -48,4 +51,6 @@ private:
 	UPROPERTY() TObjectPtr<UMVVM_LoadSlot> LoadSlot_0;
 	UPROPERTY() TObjectPtr<UMVVM_LoadSlot> LoadSlot_1;
 	UPROPERTY() TObjectPtr<UMVVM_LoadSlot> LoadSlot_2;
+	
+	UPROPERTY() UMVVM_LoadSlot* SelectedSlot;
 };
