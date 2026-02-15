@@ -18,4 +18,5 @@ void AAuraLoadMenuHUD::BeginPlay()
 	LoadMenuWidget->AddToViewport();
 	LoadMenuWidget->BlueprintInitializeWidget();
 	
+	LoadMenuViewModel->LoadData();
 }

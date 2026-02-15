@@ -34,6 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotButtonPressed(const int32 SlotIndex);
 	
+	void LoadData();
 	
 private:
 	UPROPERTY() TMap<int32, UMVVM_LoadSlot*> LoadSlots;
