@@ -43,6 +43,10 @@ void UMVVM_LoadMenu::NewGameButtonPressed(const int32 SlotIndex)
 
 void UMVVM_LoadMenu::SelectSlotButtonPressed(const int32 SlotIndex)
 {
+	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
+	{
+		LoadSlot.Value->EnableSelectSlotButton.Broadcast(LoadSlot.Key != SlotIndex);
+	}
 }
 
 void UMVVM_LoadMenu::LoadData()
