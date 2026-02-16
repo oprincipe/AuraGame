@@ -27,6 +27,8 @@ public:
 	FString GetPlayerName() const { return PlayerName; }
 	void SetMapName(const FString& InMapName);
 	FString GetMapName() const { return MapName; }
+	void SetPlayerLevel(const int32 InLevel);
+	int32 GetPlayerLevel() const { return PlayerLevel; }
 	
 	/** Delegates */
 	UPROPERTY(BlueprintAssignable) FSetWidgetSwitcherIndex SetWidgetSwitcherIndex;
@@ -51,5 +53,8 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
 	FString MapName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
+	int32 PlayerLevel;
 	
 };
