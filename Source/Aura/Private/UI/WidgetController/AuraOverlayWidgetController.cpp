@@ -20,9 +20,9 @@ void UAuraOverlayWidgetController::BroadcastInitialValues()
 void UAuraOverlayWidgetController::BindCallbackToDependencies()
 {
 	GetAuraPlayerState()->OnXPChangeDelegate.AddUObject(this, &UAuraOverlayWidgetController::OnXPChanged);
-	GetAuraPlayerState()->OnLevelChangeDelegate.AddLambda([this](const int32 NewLevel)
+	GetAuraPlayerState()->OnLevelChangeDelegate.AddLambda([this](const int32 NewLevel, const bool bLevelUp)
 	{
-		OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
+		OnPlayerLevelChangedDelegate.Broadcast(NewLevel, bLevelUp);
 	});
 	
 	if (UAuraAbilitySystemComponent* AuraABS = GetAuraAbilitySystemComponent())

@@ -12,6 +12,7 @@ class UAttributeSet;
 class UAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAuraPlayerStatChanged, int32 /** Stat value */);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLevelChanged, int32 /** Stat value */, bool /** bLevelUp */);
 
 UCLASS()
 class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInterface
@@ -27,9 +28,9 @@ public:
 	// End IAbilitySystemInterface
 
 	FOnAuraPlayerStatChanged OnXPChangeDelegate;
-	FOnAuraPlayerStatChanged OnLevelChangeDelegate;
 	FOnAuraPlayerStatChanged OnAttributePointsChangeDelegate;
 	FOnAuraPlayerStatChanged OnSpellPointsChangeDelegate;
+	FOnLevelChanged OnLevelChangeDelegate;
 	
 protected:
 #pragma region  AbilitySystemProperties
@@ -67,7 +68,7 @@ private:
 	void OnRep_Level(const int32& OldLevel) const;
 	
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_XP) 
-	int32 XP = 1;
+	int32 XP = 0;
 	UFUNCTION() 
 	void OnRep_XP(const int32 OldXP) const;
 	

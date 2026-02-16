@@ -33,7 +33,7 @@ public:
 	UPROPERTY() bool bFirstTimeLoading = true;
 	
 	/** Player Values */
-	UPROPERTY() int32 PlayerLevel = 0;
+	UPROPERTY() int32 PlayerLevel = 1;
 	UPROPERTY() int32 XP = 0;
 	UPROPERTY() int32 SpellPoints = 0;
 	UPROPERTY() int32 AttributePoints = 0;
