@@ -23,6 +23,7 @@ public:
 	virtual void OnRep_PlayerState() override;
 	virtual void OnRep_Burned() override;
 	virtual void OnRep_Stunned() override;
+	void LoadProgress();
 
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() const override;

@@ -7,6 +7,7 @@
 #include "AuraGameplayTags.h"
 #include "NiagaraComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
 #include "AbilitySystem/Debuff/AuraDebuffNiagaraComponent.h"
 #include "Camera/CameraComponent.h"
@@ -55,7 +56,37 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	
 	// Init ability actor info for the server
 	InitAbilityActorInfo();
+	LoadProgress();
+	
+	// todo: load abilities from disk
 	AddCharacterAbilities();
+}
+
+void AAuraCharacter::LoadProgress()
+{
+	const AAuraGameModeBase* AuraGameModeBase = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!AuraGameModeBase) return;
+	
+	UAuraLoadMenuSaveGame* SaveData = AuraGameModeBase->RetrieveInGameSaveData();
+	if (!SaveData) return;
+	
+	if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+	{
+		AuraPlayerState->SetLevel(SaveData->PlayerLevel);
+		AuraPlayerState->SetXP(SaveData->XP);
+		AuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+		AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+	}
+	
+	if (SaveData->bFirstTimeLoading)
+	{
+		InitializeDefaultAttributes();
+		AddCharacterAbilities();
+	}
+	else
+	{
+		
+	}
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -246,6 +277,22 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
 	if (!SaveData) return;
 	
 	SaveData->PlayerStartTag = CheckPointTag;
+	
+	if (const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>())
+	{
+		SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+		SaveData->XP = AuraPlayerState->GetXP();
+		SaveData->SpellPoints = AuraPlayerState->GetSpellPoints();
+		SaveData->AttributePoints = AuraPlayerState->GetAttributePoints();
+	}
+	
+	SaveData->Strength = UAuraAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+	SaveData->Intelligence = UAuraAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+	SaveData->Resilience = UAuraAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
+	SaveData->Vigor = UAuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+	
+	SaveData->bFirstTimeLoading = false;
+	
 	AuraGameModeBase->SaveInGameProgressData(SaveData);	
 }
 
@@ -273,7 +320,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 		}
 	}
 
-	InitializeDefaultAttributes();
+	// InitializeDefaultAttributes(); -> we load from disk now
 }
 
 

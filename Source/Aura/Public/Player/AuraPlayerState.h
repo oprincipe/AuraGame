@@ -54,6 +54,9 @@ public:
 	
 	void SetXP(const int32 InXP);
 	void SetLevel(const int32 InLevel);
+	void SetAttributePoints(const int32 InAttributePoints);
+	void SetSpellPoints(const int32 InSpellPoints);
+	
 	
 	UPROPERTY(EditDefaultsOnly) TObjectPtr<ULevelUpInfo> LevelUpInfo;
 	
