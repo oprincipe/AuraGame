@@ -40,10 +40,14 @@ public:
 	TSoftObjectPtr<UWorld> DefaultMap;
 	
 	UPROPERTY(EditDefaultsOnly)
+	FName DefaultPlayerStartTag = FName("PlayerStart");
+	
+	UPROPERTY(EditDefaultsOnly)
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
 	
 	
 	/** Functions */
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
 	static void DeleteSlotData(const FString& SlotName, int32 SlotIndex);
 	UAuraLoadMenuSaveGame* GetSaveSlotData(const FString& SlotName, const int32 SlotIndex) const;

@@ -3,6 +3,7 @@
 
 #include "UI/ViewModel/MVVM_LoadMenu.h"
 
+#include "Game/AuraGameInstance.h"
 #include "Game/AuraGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/ViewModel/MVVM_LoadSlot.h"
@@ -33,6 +34,7 @@ UMVVM_LoadSlot* UMVVM_LoadMenu::GetLoadSlotViewModelByIndex(const int32 Index)
 void UMVVM_LoadMenu::NewSlotButtonPressed(const int32 SlotIndex, const FString& EnteredName)
 {
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!AuraGameMode) return;
 	
 	LoadSlots[SlotIndex]->SetMapName(AuraGameMode->DefaultMapName);
 	LoadSlots[SlotIndex]->SetPlayerName(EnteredName);
@@ -40,6 +42,13 @@ void UMVVM_LoadMenu::NewSlotButtonPressed(const int32 SlotIndex, const FString& 
 	
 	AuraGameMode->SaveSlotData(LoadSlots[SlotIndex], SlotIndex);
 	LoadSlots[SlotIndex]->InitializeSlot();
+	
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(UGameplayStatics::GetGameInstance(this));
+	if (!AuraGameInstance) return;
+	AuraGameInstance->LoadSlotName = LoadSlots[SlotIndex]->LoadSlotName;
+	AuraGameInstance->LoadSlotIndex = SlotIndex;
+	AuraGameInstance->PlayerStartTag = AuraGameMode->DefaultPlayerStartTag;
+	
 }
 
 void UMVVM_LoadMenu::NewGameButtonPressed(const int32 SlotIndex)
