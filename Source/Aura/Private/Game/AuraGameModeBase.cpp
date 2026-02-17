@@ -94,6 +94,8 @@ UAuraLoadMenuSaveGame* AAuraGameModeBase::RetrieveInGameSaveData() const
 
 void AAuraGameModeBase::SaveInGameProgressData(UAuraLoadMenuSaveGame* SaveObject) const
 {
+	if (!SaveObject) return;
+	
 	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
 	if (!AuraGameInstance) return;
 	
