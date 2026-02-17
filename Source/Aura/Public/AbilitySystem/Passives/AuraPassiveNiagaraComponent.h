@@ -8,6 +8,8 @@
 #include "AuraPassiveNiagaraComponent.generated.h"
 
 
+class UAuraAbilitySystemComponent;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class AURA_API UAuraPassiveNiagaraComponent : public UNiagaraComponent
 {
@@ -24,5 +26,5 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void OnPassiveActivate(const FGameplayTag& AbilityTag, const bool bActivate);
-	
+	void ActivateIfEquipped(UAuraAbilitySystemComponent* AuraASC);
 };

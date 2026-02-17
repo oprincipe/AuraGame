@@ -41,6 +41,9 @@ struct FSavedAbility
 	int32 AbilityLevel = 0;
 };
 
+// Add the AddUnique capabilities
+inline bool operator==(const FSavedAbility& Left, const FSavedAbility& Right) { return Left.AbilityTag.MatchesTagExact(Right.AbilityTag); }
+
 
 /**
  * 
