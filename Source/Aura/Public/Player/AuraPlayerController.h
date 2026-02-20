@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class IHighlightInterface;
 class AAuraMagicCircle;
 class UNiagaraSystem;
 class UDamageTextWidgetComponent;
@@ -16,7 +17,6 @@ class UAuraInputConfig;
 struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
-class IEnemyInterface;
 
 /**
  * 
@@ -50,8 +50,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Input", meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UAuraInputConfig> InputConfig;
 
-	TScriptInterface<IEnemyInterface> LastActor;
-	TScriptInterface<IEnemyInterface> ThisActor;
+	TScriptInterface<IHighlightInterface> LastActor;
+	TScriptInterface<IHighlightInterface> ThisActor;
 	FHitResult CursorHit;
 
 	UPROPERTY(EditDefaultsOnly, Category="Widget Components")
