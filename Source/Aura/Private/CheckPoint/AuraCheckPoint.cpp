@@ -19,7 +19,7 @@ AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer)
 	CheckPointMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CheckPointMesh->SetCollisionResponseToAllChannels(ECR_Block);
 	
-	CheckPointMesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_TAN);
+	CheckPointMesh->SetCustomDepthStencilValue(CustomDepthStencilOverride);
 	CheckPointMesh->MarkRenderStateDirty();
 	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
@@ -34,7 +34,12 @@ AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer)
 
 void AAuraCheckPoint::HighlightActor_Implementation()
 {
-	CheckPointMesh->SetRenderCustomDepth(true);
+	if (!bReached)
+	{
+		CheckPointMesh->SetCustomDepthStencilValue(CustomDepthStencilOverride);
+		CheckPointMesh->SetRenderCustomDepth(true);
+		CheckPointMesh->MarkRenderStateDirty();
+	}
 }
 
 void AAuraCheckPoint::UnHighlightActor_Implementation()
@@ -64,7 +69,10 @@ void AAuraCheckPoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraCheckPoint::OnSphereOverlap);
+	if (bBindOverlapCallback)
+	{
+		Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraCheckPoint::OnSphereOverlap);
+	}
 }
 
 void AAuraCheckPoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
