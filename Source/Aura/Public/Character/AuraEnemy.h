@@ -40,8 +40,8 @@ public:
 	// End IEnemyInterface
 	
 	// Start IHighlightInterface
-	virtual void HighlightActor() override;
-	virtual void UnHighlightActor() override;
+	virtual void HighlightActor_Implementation() override;
+	virtual void UnHighlightActor_Implementation() override;
 	// End IHighlightInterface
 
 	UPROPERTY(BlueprintAssignable)

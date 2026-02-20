@@ -18,6 +18,14 @@ struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
 
+enum class ETargetingStatus : uint8
+{
+	TargetingEnemy,
+	TargetingNonEnemy,
+	NotTargeting,
+};
+
+
 /**
  * 
  */
@@ -50,8 +58,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Input", meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UAuraInputConfig> InputConfig;
 
-	TScriptInterface<IHighlightInterface> LastActor;
-	TScriptInterface<IHighlightInterface> ThisActor;
+	UPROPERTY() TObjectPtr<AActor> LastActor;
+	UPROPERTY() TObjectPtr<AActor> ThisActor;
 	FHitResult CursorHit;
 
 	UPROPERTY(EditDefaultsOnly, Category="Widget Components")
@@ -68,7 +76,8 @@ private:
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
-	bool bTargeting = false;
+	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
+	
 	UPROPERTY(EditDefaultsOnly) float AutoRunAcceptanceRadius = 50.f;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<USplineComponent> Spline;
 	UPROPERTY(EditDefaultsOnly) TObjectPtr<UNiagaraSystem> ClickNiagaraSystem;
@@ -85,6 +94,8 @@ private:
 	void AutoRun();
 	void CursorTrace();
 	void HandleActorHighlighting() const;
+	static void HighlightActor(AActor* InActor);
+	static void UnHighlightActor(AActor* InActor);
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
