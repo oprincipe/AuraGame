@@ -7,7 +7,7 @@
 #include "HighlightInterface.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE()
+UINTERFACE(MinimalAPI, BlueprintType)
 class UHighlightInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -27,4 +27,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void UnHighlightActor();
 	
+	UFUNCTION(BlueprintNativeEvent)
+	void SetMoveToLocation(FVector& OutDestination);
 };

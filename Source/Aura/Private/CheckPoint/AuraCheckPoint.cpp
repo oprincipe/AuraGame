@@ -19,13 +19,32 @@ AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer)
 	CheckPointMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CheckPointMesh->SetCollisionResponseToAllChannels(ECR_Block);
 	
+	CheckPointMesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_TAN);
+	CheckPointMesh->MarkRenderStateDirty();
+	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	Sphere->SetupAttachment(CheckPointMesh);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	
-	
+	MoveToComponent = CreateDefaultSubobject<USceneComponent>("MoveToComponent");
+	MoveToComponent->SetupAttachment(GetRootComponent());
+}
+
+void AAuraCheckPoint::HighlightActor_Implementation()
+{
+	CheckPointMesh->SetRenderCustomDepth(true);
+}
+
+void AAuraCheckPoint::UnHighlightActor_Implementation()
+{
+	CheckPointMesh->SetRenderCustomDepth(false);
+}
+
+void AAuraCheckPoint::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	OutDestination = MoveToComponent->GetComponentLocation();
 }
 
 bool AAuraCheckPoint::ShouldLoadTransform_Implementation() const

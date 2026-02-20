@@ -42,6 +42,7 @@ public:
 	// Start IHighlightInterface
 	virtual void HighlightActor_Implementation() override;
 	virtual void UnHighlightActor_Implementation() override;
+	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
 	// End IHighlightInterface
 
 	UPROPERTY(BlueprintAssignable)
