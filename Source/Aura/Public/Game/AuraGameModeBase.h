@@ -54,5 +54,6 @@ public:
 	UAuraLoadMenuSaveGame* RetrieveInGameSaveData() const;
 	void SaveInGameProgressData(UAuraLoadMenuSaveGame* SaveObject) const;
 	void SaveWorldState(UWorld* World) const;
+	void LoadWorldState(UWorld* World) const;
 	void TravelToMap(const UMVVM_LoadSlot* LoadSlot);
 };

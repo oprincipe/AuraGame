@@ -4,7 +4,9 @@
 #include "CheckPoint/AuraCheckPoint.h"
 
 #include "Components/SphereComponent.h"
+#include "Game/AuraGameModeBase.h"
 #include "Interaction/PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer)
@@ -26,6 +28,19 @@ AAuraCheckPoint::AAuraCheckPoint(const FObjectInitializer& ObjectInitializer)
 	
 }
 
+bool AAuraCheckPoint::ShouldLoadTransform_Implementation() const
+{
+	return false;
+}
+
+void AAuraCheckPoint::LoadActor_Implementation()
+{
+	if (bReached)
+	{
+		HandleGlowEffects();
+	}
+}
+
 void AAuraCheckPoint::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,9 +53,15 @@ void AAuraCheckPoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (!OtherActor->Implements<UPlayerInterface>()) return;
 	
-	HandleGlowEffects();
+	bReached = true;
+	
+	if (const AAuraGameModeBase* AuraGM = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		AuraGM->SaveWorldState(GetWorld());
+	}
 	
 	IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
+	HandleGlowEffects();
 }
 
 void AAuraCheckPoint::HandleGlowEffects()

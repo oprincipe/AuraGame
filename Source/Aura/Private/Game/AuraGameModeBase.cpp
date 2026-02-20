@@ -4,6 +4,7 @@
 #include "Game/AuraGameModeBase.h"
 
 #include "EngineUtils.h"
+#include "Aura/AuraLogChannel.h"
 #include "Game/AuraGameInstance.h"
 #include "Game/AuraLoadMenuSaveGame.h"
 #include "GameFramework/PlayerStart.h"
@@ -111,6 +112,8 @@ void AAuraGameModeBase::SaveInGameProgressData(UAuraLoadMenuSaveGame* SaveObject
 
 void AAuraGameModeBase::SaveWorldState(UWorld* World) const
 {
+	if (!World) return;
+	
 	FString WorldName = World->GetMapName();
 	WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
 	
@@ -156,6 +159,51 @@ void AAuraGameModeBase::SaveWorldState(UWorld* World) const
 		}
 		
 		UGameplayStatics::SaveGameToSlot(SaveGame, AuraGI->LoadSlotName, AuraGI->LoadSlotIndex);
+	}
+}
+
+void AAuraGameModeBase::LoadWorldState(UWorld* World) const
+{
+	if (!World) return;
+	
+	FString WorldName = World->GetMapName();
+	WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
+	
+	UAuraGameInstance* AuraGI = Cast<UAuraGameInstance>(GetGameInstance());
+	if (!AuraGI) return;
+	
+	if (UGameplayStatics::DoesSaveGameExist(AuraGI->LoadSlotName, AuraGI->LoadSlotIndex))
+	{
+		UAuraLoadMenuSaveGame* SaveGame = Cast<UAuraLoadMenuSaveGame>(UGameplayStatics::LoadGameFromSlot(AuraGI->LoadSlotName, AuraGI->LoadSlotIndex));
+		if (!SaveGame)
+		{
+			UE_LOG(LogAura, Error, TEXT("Failed to load save game for slot %s, index %d"), *AuraGI->LoadSlotName, AuraGI->LoadSlotIndex);
+			return;
+		}
+		
+		for (FActorIterator It(World); It; ++It)
+		{
+			AActor* Actor = *It;
+			if (!Actor->Implements<USaveInterface>()) continue;
+			
+			for (FSavedActor SavedActor : SaveGame->GetSavedMapWithMapName(WorldName).SavedActors)
+			{
+				if (SavedActor.ActorName == Actor->GetFName())
+				{
+					if (ISaveInterface::Execute_ShouldLoadTransform(Actor))
+					{
+						Actor->SetActorTransform(SavedActor.ActorTransform);
+					}
+					
+					FMemoryReader MemoryReader(SavedActor.Bytes);
+					FObjectAndNameAsStringProxyArchive Archive(MemoryReader, true);
+					Archive.ArIsSaveGame = true;
+					Actor->Serialize(Archive); // converts binary bites back into variables
+					ISaveInterface::Execute_LoadActor(Actor);					
+				}
+			}
+			
+		}
 	}
 }
 
