@@ -31,8 +31,6 @@ public:
 	virtual AActor* GetAvatar_Implementation() override;
 	// End ICombatInterface
 	
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-	
 	// Start IEnemyInterface
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
@@ -45,6 +43,9 @@ public:
 	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
 	// End IHighlightInterface
 
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	void SetEnemyLevel(const int32 InLevel) { Level = InLevel; }
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnHealthChanged;
 

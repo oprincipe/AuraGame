@@ -165,7 +165,7 @@ protected:
 	
 public:
     UAttributeSet* GetAttributeSet() const { return AttributeSet; }
-
+	void SetCharacterClass(const ECharacterClass InCharacterClass) { CharacterClass = InCharacterClass; };
     
 private:
 	UPROPERTY(EditAnywhere, Category="Abilities")
