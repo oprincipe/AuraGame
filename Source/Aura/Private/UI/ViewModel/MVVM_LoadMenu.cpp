@@ -97,7 +97,11 @@ void UMVVM_LoadMenu::PlayButtonPressed() const
 void UMVVM_LoadMenu::LoadData()
 {
 	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
-	if (!AuraGameMode) return;
+	if (!AuraGameMode)
+	{
+		if (GEngine) GEngine->AddOnScreenDebugMessage(1, 15.f, FColor::Magenta, FString("Please switch to Single Player"));
+		return;
+	}
 	
 	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
 	{
