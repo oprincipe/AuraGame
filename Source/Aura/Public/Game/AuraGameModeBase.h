@@ -53,7 +53,8 @@ public:
 	UAuraLoadMenuSaveGame* GetSaveSlotData(const FString& SlotName, const int32 SlotIndex) const;
 	UAuraLoadMenuSaveGame* RetrieveInGameSaveData() const;
 	void SaveInGameProgressData(UAuraLoadMenuSaveGame* SaveObject) const;
-	void SaveWorldState(UWorld* World) const;
+	void SaveWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void LoadWorldState(UWorld* World) const;
 	void TravelToMap(const UMVVM_LoadSlot* LoadSlot);
+	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
 };

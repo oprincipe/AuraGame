@@ -25,6 +25,7 @@ public:
 	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
 	/** End HighlightInterface */
 	
+	
 	/** Start SaveInterface */
 	virtual bool ShouldLoadTransform_Implementation() const override;
 	virtual void LoadActor_Implementation() override;
@@ -45,10 +46,8 @@ protected:
 	
 	UFUNCTION(BlueprintCallable)
 	void HandleGlowEffects();
-	
-private:
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> CheckPointMesh;
 	
 	UPROPERTY(VisibleAnywhere)
@@ -57,6 +56,6 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USceneComponent> MoveToComponent;
 	
-	UPROPERTY(EditDefaultsOnly, meta=(AllowPrivateAccess=true))
+	UPROPERTY(EditDefaultsOnly)
 	int32 CustomDepthStencilOverride = CUSTOM_DEPTH_TAN;
 };
