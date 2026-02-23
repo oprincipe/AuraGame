@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "AuraEffectActor.generated.h"
 
+class URotatingMovementComponent;
 class UAbilitySystemComponent;
 class UGameplayEffect;
 
@@ -36,7 +37,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
+	/** Components */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Applied Effects")
+	TObjectPtr<URotatingMovementComponent> RotatingMovementComponent;
+	
 	/** Instant effects */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
 	EEffectApplicationPolicy InstantEffectApplicationPolicy = EEffectApplicationPolicy::DoNotApply;
@@ -77,9 +82,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Applied Effects")
 	float ActorLevel = 1.0f;
-
-#pragma region Functions
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pickup Movement")
+	bool bRotates = true;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pickup Movement")
+	float RotationRate = 45.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pickup Movement")
+	float RotationInterval = .05f;
+	
+	/** Functions */
 	UFUNCTION(BlueprintCallable, Category="AuraEffectActor")
 	void ApplyEffectToTarget(AActor* TargetActor, const TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
@@ -88,6 +101,4 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category="AuraEffectActor")
 	void OnEndOverlap(AActor* TargetActor);
-
-#pragma endregion
 };

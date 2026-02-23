@@ -5,18 +5,27 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "GameFramework/RotatingMovementComponent.h"
 
 AAuraEffectActor::AAuraEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
+	
+	RotatingMovementComponent = CreateDefaultSubobject<URotatingMovementComponent>("RotatingMovementComponent");
+	RotatingMovementComponent->bAutoActivate = bRotates;
+	RotatingMovementComponent->RotationRate = FRotator(0.f, RotationRate, 0.f);
+	RotatingMovementComponent->SetComponentTickInterval(RotationInterval);
 }
 
 void AAuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if (!bRotates)
+	{
+		RotatingMovementComponent->DestroyComponent();
+	}
 }
 
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, const TSubclassOf<UGameplayEffect> GameplayEffectClass)
