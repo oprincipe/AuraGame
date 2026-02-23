@@ -257,11 +257,15 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 
 	if (USkeletalMeshComponent* CharacterMesh = GetMesh())
 	{
-		CharacterMesh->SetSimulatePhysics(true);
-		CharacterMesh->SetEnableGravity(true);
-		CharacterMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-		CharacterMesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-		CharacterMesh->AddImpulse(DeathImpulse, NAME_None, true);
+		if (bUseRagdoll)
+		{
+			// Ragdoll
+			CharacterMesh->SetSimulatePhysics(true);
+			CharacterMesh->SetEnableGravity(true);
+			CharacterMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+			CharacterMesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+			CharacterMesh->AddImpulse(DeathImpulse, NAME_None, true);
+		}
 	}
 	
 	if (GetCapsuleComponent())

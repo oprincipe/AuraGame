@@ -28,6 +28,7 @@ public:
 	// Start ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() const override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	// End ICombatInterface
 	
 	// Start IPlayerInterface
@@ -50,6 +51,12 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
+	
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	float DeathTime = 5.f;
+	FTimerHandle DeathTimer;
+	
 	
 private:
 	UPROPERTY(VisibleAnywhere)

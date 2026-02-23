@@ -48,13 +48,16 @@ public:
 	
 	/** Functions */
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
-	void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
+	void PlayerDied(const ACharacter* DeadCharacter);
+	
+	void SaveSlotData(const UMVVM_LoadSlot* LoadSlot, int32 SlotIndex) const;
 	static void DeleteSlotData(const FString& SlotName, int32 SlotIndex);
 	UAuraLoadMenuSaveGame* GetSaveSlotData(const FString& SlotName, const int32 SlotIndex) const;
 	UAuraLoadMenuSaveGame* RetrieveInGameSaveData() const;
 	void SaveInGameProgressData(UAuraLoadMenuSaveGame* SaveObject) const;
 	void SaveWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void LoadWorldState(UWorld* World) const;
-	void TravelToMap(const UMVVM_LoadSlot* LoadSlot);
+	
 	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
+	void TravelToMap(const UMVVM_LoadSlot* LoadSlot);
 };

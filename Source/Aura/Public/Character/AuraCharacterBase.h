@@ -76,6 +76,7 @@ public:
 protected:
     virtual void BeginPlay() override;
 	
+	UPROPERTY(BlueprintReadOnly)
     bool bDead = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
@@ -177,6 +178,9 @@ private:
     UPROPERTY(EditAnywhere, Category="Combat")
     TObjectPtr<UAnimMontage> HitReactMontage;
     
-    UPROPERTY(EditAnywhere, Category="Combat")
-    TArray<FTaggedMontage> AttackMontages;
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TArray<FTaggedMontage> AttackMontages;
+	
+	UPROPERTY(EditAnywhere, Category="Combat")
+	bool bUseRagdoll = true;
 };
