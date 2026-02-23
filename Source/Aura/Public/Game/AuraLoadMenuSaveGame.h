@@ -77,7 +77,7 @@ struct FSavedAbility
 	FGameplayTag AbilityType = FGameplayTag();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ClassDefaults")
-	int32 AbilityLevel = 0;
+	int32 AbilityLevel = 1;
 };
 
 // Add the AddUnique capabilities

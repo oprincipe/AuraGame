@@ -75,7 +75,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
 	bool bApplyEffectsToEnemy = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Applied Effects")
 	float ActorLevel = 1.0f;
 
 #pragma region Functions

@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "AuraGameModeBase.generated.h"
 
+class ULootTears;
 class UAuraLoadMenuSaveGame;
 class USaveGame;
 class UMVVM_LoadSlot;
@@ -30,6 +31,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Character Defaults")
 	TObjectPtr<UAuraAbilityInfo> AbilityInfo;
 	
+	UPROPERTY(EditDefaultsOnly, Category="Loot Tiers")
+	TObjectPtr<ULootTears> LootTears;
+	
 	UPROPERTY(EditDefaultsOnly) 
 	TSubclassOf<USaveGame> LoadMenuSaveGameClass;
 	
@@ -44,6 +48,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly)
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
+	
 	
 	
 	/** Functions */

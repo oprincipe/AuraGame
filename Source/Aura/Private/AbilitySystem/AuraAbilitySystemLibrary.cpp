@@ -581,8 +581,16 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	return EffectContextHandle;
 }
 
+ULootTears* UAuraAbilitySystemLibrary::GetLootTiers(const UObject* WorldContextObject)
+{
+	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (!AuraGameMode) return nullptr;
+
+	return AuraGameMode->LootTears;
+}
+
 void UAuraAbilitySystemLibrary::SetIsRadialDamageEffectParams(FDamageEffectParams& DamageEffectParams,
-	const bool bIsRadial, const float InnerRadius, const float OuterRadius, const FVector Origin)
+                                                              const bool bIsRadial, const float InnerRadius, const float OuterRadius, const FVector Origin)
 {
 	DamageEffectParams.bIsRadialDamage = bIsRadial;
 	DamageEffectParams.RadialDamageInnerRadius = InnerRadius;
